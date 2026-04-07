@@ -1,26 +1,44 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Background Colors */
+  --bg-primary: #dadbd5;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #f3eee8;
+  --bg-alpha: #3a4443;
+
+  /* Text Colors */
+  --text-primary: #292929;
+  --text-secondary: #383837;
+  --text-alpha: #b3b5b6;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  /* 
+    Tailwind generates ALL utilities for a color.
+    By naming them with bg- and text- prefixes, 
+    you get `bg-bg-primary` and `text-text-primary`.
+    This prevents conflicts where `bg-primary` and `text-primary`
+    would otherwise try to share the exact same hex code.
+  */
+  --color-bg-primary: var(--bg-primary);
+  --color-bg-secondary: var(--bg-secondary);
+  --color-bg-tertiary: var(--bg-tertiary);
+  --color-bg-alpha: var(--bg-alpha);
+
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-alpha: var(--text-alpha);
+
+  /* Fonts mapped previously */
+  --font-barlow: var(--font-barlow-condensed);
+  --font-gallient: var(--font-gallient);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+/* Base element defaults */
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
 }
