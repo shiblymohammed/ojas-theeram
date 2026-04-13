@@ -1,7 +1,12 @@
+"use client";
+
 export default function ProductsPreview() {
   return (
-    <section className="flex items-center justify-center min-h-[100vh] bg-pink-200">
-      <h2 className="text-4xl font-bold text-pink-900">Products Preview</h2>
+    <section id="products" className="py-24 bg-[var(--bg-primary)]">
+      <div className="container mx-auto px-4 text-center">
+        <h2 className="text-4xl text-[var(--brand-forest)] font-gallient mb-4">Products Section</h2>
+        <p className="text-[var(--text-secondary)]">Layout removed. Ready for new design.</p>
+      </div>
     </section>
   );
 }

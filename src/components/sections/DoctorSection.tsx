@@ -1,7 +1,12 @@
+"use client";
+
 export default function DoctorSection() {
   return (
-    <section className="flex items-center justify-center min-h-[100vh] bg-purple-200">
-      <h2 className="text-4xl font-bold text-purple-900">Doctor Section</h2>
+    <section id="doctor" className="py-24 bg-[var(--bg-secondary)]">
+      <div className="container mx-auto px-4 text-center">
+        <h2 className="text-4xl text-[var(--brand-forest)] font-gallient mb-4">Doctor / Trust</h2>
+        <p className="text-[var(--text-secondary)]">Layout removed. Ready for new design.</p>
+      </div>
     </section>
   );
 }

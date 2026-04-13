@@ -1,122 +1,167 @@
 "use client";
 
 import Image from "next/image";
-import { motion } from "framer-motion";
-import { clinic } from "@/data/clinic";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
 
 export default function HeroSection() {
+  const ref = useRef(null);
+  
+  // Parallax & slow zoom for the background
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start start", "end start"]
+  });
+  
+  const y = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
+  const scale = useTransform(scrollYProgress, [0, 1], [1, 1.15]);
+  const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+
   return (
-    <div className="sticky top-0 h-screen w-full -z-10">
-      <section className="relative w-full h-full flex items-center justify-center overflow-hidden pt-20 pb-16">
-        {/* ── Full-bleed Lush Background ── */}
+    <div ref={ref} className="sticky top-0 h-screen w-full -z-10 bg-[var(--bg-primary)] overflow-hidden">
+      
+      {/* ── Background Image with Parallax & Slow Zoom ── */}
+      <motion.div 
+        className="absolute inset-0 w-full h-full transform-gpu"
+        style={{ y, scale }}
+      >
         <Image
-          src="/images/hero/cloud-forest-landscape.jpg"
-          alt="Cloud Forest Landscape"
+          src="/images/hero/leaves.jpg"
+          alt="Ayurvedic Nature Background"
           fill
-          className="object-cover scale-105"
+          className="object-cover"
           quality={100}
           priority
           sizes="100vw"
         />
-      
-      {/* ── Dark Overlay for Contrast ── */}
-      <div className="absolute inset-0 bg-[#0a1a14]/80" />
-
-      {/* ── Floating Particles/Dust (subtle) ── */}
-      <div className="absolute inset-0 pointer-events-none bg-[url('/images/other/dots-shape.png')] opacity-10 bg-repeat animate-pulse" />
-
-      {/* ── Main Content Grid ── */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-6 lg:px-12 flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
+        {/* Soft overlay for readability and premium vibe */}
+        <div className="absolute inset-0 bg-[#060a08]/40 backdrop-blur-[2px]" />
         
-        {/* ── Left Content: Typography & List ── */}
-        <motion.div 
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="flex-1 w-full pt-10"
-        >
-          <div className="mb-8">
-            <span className="block w-12 h-[1px] bg-[#8B9D83] mb-6" />
-            <h1 className="font-gallient text-[40px] sm:text-[50px] lg:text-[70px] text-[#f3eee8] leading-[1.05] uppercase tracking-wide">
-              Authentic Kerala <br />
-              <span className="text-[#8B9D83]">Ayurvedic</span> <br />
-              Healing
-            </h1>
-          </div>
-          
-          <ul className="space-y-6 font-barlow text-sm sm:text-base tracking-[0.08em] text-[#f3eee8]/80 max-w-md">
-            <li className="flex items-start gap-4 group">
-              <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[#8B9D83] flex-shrink-0 group-hover:scale-150 transition-transform duration-300 shadow-[0_0_8px_#8B9D83]" />
-              <p>Natural herbal ingredients and therapies brought straight from Kerala.</p>
-            </li>
-            <li className="flex items-start gap-4 group">
-              <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[#8B9D83] flex-shrink-0 group-hover:scale-150 transition-transform duration-300 shadow-[0_0_8px_#8B9D83]" />
-              <p>Personalised Ayurvedic treatment plans for detox and rejuvenation.</p>
-            </li>
-            <li className="flex items-start gap-4 group">
-              <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[#8B9D83] flex-shrink-0 group-hover:scale-150 transition-transform duration-300 shadow-[0_0_8px_#8B9D83]" />
-              <p>Award-winning holistic spa care for profound mind and body wellness.</p>
-            </li>
-          </ul>
+        {/* Gradient that fades to background color at the bottom to transition smoothly into the scroll reveal */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/80" />
+      </motion.div>
 
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.6, duration: 0.8 }}
-            className="mt-10"
-          >
-            <button className="bg-[#8B9D83]/20 hover:bg-[#8B9D83] text-[#f3eee8] border border-[#8B9D83]/50 hover:border-[#8B9D83] px-8 py-3 rounded-full font-barlow uppercase tracking-[0.2em] text-xs transition-all duration-500 shadow-[0_0_15px_rgba(139,157,131,0.15)] hover:shadow-[0_0_25px_rgba(139,157,131,0.4)]">
-              Discover Our Retreat
-            </button>
-          </motion.div>
+      {/* ── Floating Leaf Animations ── */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <motion.div
+           animate={{
+             y: [0, -30, 0],
+             rotate: [0, 10, -5, 0],
+             x: [0, 20, 0]
+           }}
+           transition={{
+             duration: 10,
+             repeat: Infinity,
+             ease: "easeInOut"
+           }}
+           className="absolute top-[20%] left-[10%] md:left-[15%] w-24 h-24 md:w-32 md:h-32 opacity-40 mix-blend-screen brightness-150"
+        >
+          <Image src="/images/other/leaf-1-3.png" alt="Leaf Background Element" fill className="object-contain drop-shadow-[0_0_15px_rgba(255,255,255,0.2)]" />
         </motion.div>
-
-        {/* ── Right Content: Glassmorphism Framed Display ── */}
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1, ease: "easeOut", delay: 0.2 }}
-          className="flex-1 w-full max-w-lg lg:max-w-none"
+        
+        <motion.div
+           animate={{
+             y: [0, 40, 0],
+             rotate: [0, -15, 10, 0],
+             x: [0, -30, 0]
+           }}
+           transition={{
+             duration: 14,
+             repeat: Infinity,
+             ease: "easeInOut"
+           }}
+           className="absolute bottom-[25%] right-[5%] md:right-[15%] w-32 h-32 md:w-48 md:h-48 opacity-30 mix-blend-screen brightness-150"
         >
-          {/* Outer Glass Frame */}
-          <div className="relative aspect-square sm:aspect-[4/5] lg:aspect-square w-full p-2 lg:p-4 rounded-xl bg-black/20 backdrop-blur-md border border-white/[0.12] shadow-2xl shadow-black/50 group">
-            
-            {/* Corner Accents (subtle design details) */}
-            <div className="absolute top-0 left-0 w-4 h-4 border-t border-l border-[#8B9D83] rounded-tl-xl opacity-50" />
-            <div className="absolute top-0 right-0 w-4 h-4 border-t border-r border-[#8B9D83] rounded-tr-xl opacity-50" />
-            <div className="absolute bottom-0 left-0 w-4 h-4 border-b border-l border-[#8B9D83] rounded-bl-xl opacity-50" />
-            <div className="absolute bottom-0 right-0 w-4 h-4 border-b border-r border-[#8B9D83] rounded-br-xl opacity-50" />
-
-            {/* Inner Image Container */}
-            <div className="relative w-full h-full rounded-lg overflow-hidden border border-white/10">
-              <Image
-                src="/images/packages/rejuvenation.png"
-                alt="Ayurvedic Spa Treatment"
-                fill
-                className="object-cover transition-transform duration-[20s] group-hover:scale-110"
-                sizes="(max-width: 768px) 100vw, 50vw"
-              />
-              
-              {/* Inner Gradient Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0a1a14]/90 via-transparent to-transparent" />
-              
-              {/* Logo / Text overlay at bottom of the frame */}
-              <div className="absolute bottom-6 inset-x-0 w-full text-center">
-                <p className="font-barlow text-[#8B9D83] text-[10px] uppercase tracking-[0.3em] mb-2">
-                  Est. Tradition
-                </p>
-                <h3 className="font-gallient text-2xl text-[#f3eee8] uppercase tracking-widest drop-shadow-lg">
-                  Ojas Theeram
-                </h3>
-              </div>
-            </div>
-            
-            {/* Glowing orb effect behind the frame */}
-            <div className="absolute -inset-10 bg-[#8B9D83] opacity-0 group-hover:opacity-10 blur-3xl rounded-full transition-opacity duration-1000 -z-10" />
-          </div>
+          <Image src="/images/other/shape-2.png" alt="Shape Background Element" fill className="object-contain drop-shadow-[0_0_15px_rgba(255,255,255,0.2)]" />
         </motion.div>
       </div>
-      </section>
+
+      {/* ── Main Content ── */}
+      <motion.div 
+        style={{ opacity }}
+        className="relative z-10 w-full h-full flex flex-col items-center justify-center pt-10"
+      >
+        <div className="text-center px-6 max-w-5xl mx-auto flex flex-col items-center">
+          
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9, y: 30 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 1.2, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            className="mb-8 flex flex-col items-center"
+          >
+            {/* Logo Graphic */}
+            <div className="w-20 h-20 md:w-24 md:h-24 rounded-full border border-white/20 mb-8 flex flex-col items-center justify-center bg-white/[0.03] backdrop-blur-md shadow-[0_0_40px_rgba(255,255,255,0.1)] relative before:absolute before:inset-2 before:border before:border-white/10 before:rounded-full">
+               <span className="text-white font-gallient text-4xl md:text-5xl leading-none pt-1 text-shadow-md">O</span>
+            </div>
+            
+            {/* Main Brand Header */}
+            <h1 className="text-6xl sm:text-7xl md:text-[100px] lg:text-[130px] font-gallient text-white leading-[0.9] tracking-wider drop-shadow-2xl mb-6">
+              Ojas Theeram
+            </h1>
+            
+            {/* Tagline */}
+            <div className="flex items-center gap-4">
+              <span className="w-12 h-[1px] bg-[var(--brand-sand)]/60"></span>
+              <h2 className="text-xl md:text-3xl font-cormorant text-[var(--brand-sand)] italic tracking-[0.15em] drop-shadow-md">
+                “Holistic Healing for Mind & Body”
+              </h2>
+              <span className="w-12 h-[1px] bg-[var(--brand-sand)]/60"></span>
+            </div>
+          </motion.div>
+
+          {/* Short Line */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 0.6, ease: "easeOut" }}
+            className="mb-14 max-w-2xl"
+          >
+            <p className="text-sm md:text-lg font-space font-light text-white/80 tracking-[0.3em] uppercase leading-relaxed drop-shadow-sm">
+              Experience authentic Ayurvedic healing <br className="hidden md:block" /> rooted in tradition
+            </p>
+          </motion.div>
+
+          {/* Call to Actions */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 0.8, ease: "easeOut" }}
+            className="flex flex-col sm:flex-row items-center gap-5 md:gap-8"
+          >
+            <button className="group relative px-10 py-4 lg:px-12 lg:py-5 bg-[var(--brand-forest)] text-white rounded-full font-space tracking-widest uppercase text-xs lg:text-sm font-medium transition-all duration-500 overflow-hidden shadow-[0_0_30px_rgba(44,74,59,0.4)] hover:shadow-[0_0_40px_rgba(44,74,59,0.8)]">
+              <span className="relative z-10">Book Appointment</span>
+              <div className="absolute inset-0 bg-[#3a614d] translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out"></div>
+            </button>
+            
+            <button className="px-10 py-4 lg:px-12 lg:py-5 bg-white/5 backdrop-blur-md text-white border border-white/20 hover:bg-white/10 hover:border-white/40 rounded-full font-space tracking-widest uppercase text-xs lg:text-sm font-medium transition-all duration-500 flex items-center gap-3">
+              <span className="relative flex h-2.5 w-2.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#18f05e] opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#1ebd52]"></span>
+              </span>
+              WhatsApp
+            </button>
+          </motion.div>
+
+        </div>
+      </motion.div>
+      
+      {/* Scroll Indicator */}
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.5, duration: 1 }}
+        className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+      >
+        <span className="text-white/50 text-xs font-space uppercase tracking-[0.3em]">Scroll</span>
+        <div className="w-[1px] h-12 bg-white/20 relative overflow-hidden">
+          <motion.div 
+            animate={{ y: ["-100%", "100%"] }}
+            transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+            className="absolute top-0 left-0 w-full h-full bg-white/80"
+          />
+        </div>
+      </motion.div>
+
     </div>
   );
 }

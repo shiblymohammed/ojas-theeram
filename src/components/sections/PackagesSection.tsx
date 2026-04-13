@@ -1,112 +1,235 @@
 "use client";
 
-import { useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
-import { div } from "framer-motion/client";
+import { useState, useRef } from "react";
+import Image from "next/image";
+import { motion, AnimatePresence, useScroll, useTransform, useMotionValue, useSpring } from "framer-motion";
+import { packages } from "@/data/packages";
 
-export default function PackagesSection() {
-  const containerRef = useRef<HTMLDivElement>(null);
+const packageImages = [
+  "/images/packages/package-a.png",
+  "/images/packages/package-b.png",
+  "/images/packages/package-c.png",
+  "/images/packages/package-d.png",
+  "/images/packages/package-e.png",
+];
 
-  // Track scroll position within this 300vh section to drive both animation and sliding
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end end"]
-  });
+const getLayoutClasses = (index: number) => {
+  switch (index) {
+    case 0:
+      return "col-span-12 md:col-span-5 aspect-[4/5] relative";
+    case 1:
+      return "col-span-12 md:col-span-4 md:col-start-6 md:mt-32 aspect-square relative";
+    case 2:
+      return "col-span-12 md:col-span-3 md:mt-12 aspect-[4/5] relative";
+    case 3:
+      return "col-span-12 md:col-span-6 md:col-start-2 md:mt-24 aspect-[4/3] relative";
+    case 4:
+      return "col-span-12 md:col-span-4 md:col-start-9 md:-mt-32 aspect-[3/4] relative z-10";
+    default:
+      return "col-span-12 md:col-span-4 aspect-square relative";
+  }
+};
 
-  // Phase 1: 0% -> 40% scroll (Sunrise enters with a larger radius from further down)
-  const clipPathValue = useTransform(scrollYProgress, [0, 0.4], [45, 195]);
-  const clipPath = useTransform(clipPathValue, (v) => `circle(${v}% at 50% 185%)`);
+// ── Magnetic Button Component ──
+function MagneticButton({ children }: { children: React.ReactNode }) {
+  const ref = useRef<HTMLButtonElement>(null);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
 
-  // Phase 1.5: Fade in the Header exactly when circle covers it
-  const titleOpacity = useTransform(scrollYProgress, [0.2, 0.35], [0, 1]);
-  const titleY = useTransform(scrollYProgress, [0.2, 0.35], [40, 0]);
+  const handleMouse = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const { clientX, clientY } = e;
+    const { height, width, left, top } = ref.current!.getBoundingClientRect();
+    const middleX = clientX - (left + width / 2);
+    const middleY = clientY - (top + height / 2);
+    setPosition({ x: middleX * 0.3, y: middleY * 0.3 });
+  };
 
-  // Phase 2: 35% -> 100% scroll (Content scrolls upwards natively inside the pinned frame)
-  const scrollTrackY = useTransform(scrollYProgress, [0.35, 1], ["0%", "-100%"]);
+  const reset = () => {
+    setPosition({ x: 0, y: 0 });
+  };
 
   return (
-    <section ref={containerRef} className="relative h-[300vh] -mt-[100vh] z-20">
+    <motion.button
+      ref={ref}
+      onMouseMove={handleMouse}
+      onMouseLeave={reset}
+      animate={{ x: position.x, y: position.y }}
+      transition={{ type: "spring", stiffness: 150, damping: 15, mass: 0.1 }}
+      className="border border-[var(--text-primary)] text-[var(--text-primary)] hover:bg-[var(--text-primary)] hover:text-[#f7f7eb] px-6 py-3 tracking-widest text-[10px] uppercase font-space transition-colors duration-300"
+    >
+      {children}
+    </motion.button>
+  );
+}
 
-      {/* Sticky container stays pinned perfectly over the Hero for the entire 300vh journey */}
-      <div className="sticky top-0 h-screen w-full overflow-hidden pointer-events-none">
+// ── Main Section ──
+export default function PackagesSection() {
+  const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-        {/* The expanding mask element completely fills the screen after 35% scroll */}
-        <motion.div
-          style={{ clipPath }}
-          className="absolute inset-0 w-full h-full bg-[#f3eee8] pointer-events-auto shadow-[inset_0_0_100px_rgba(0,0,0,0.1)]"
-        >
-          {/* Subtle Background Art */}
-          <div className="absolute inset-0 bg-[url('/images/other/dots-shape.png')] opacity-10 bg-repeat pointer-events-none z-0" />
+  // Parallax Scroll logic
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"]
+  });
 
-          {/* Internal Content Scroll Track */}
+  // Assign different vertical speeds for staggered parallax effect
+  const y1 = useTransform(scrollYProgress, [0, 1], [0, -100]);
+  const y2 = useTransform(scrollYProgress, [0, 1], [0, -50]);
+  const y3 = useTransform(scrollYProgress, [0, 1], [0, -150]);
+  const y4 = useTransform(scrollYProgress, [0, 1], [0, -80]);
+  const y5 = useTransform(scrollYProgress, [0, 1], [0, -180]);
+  const parallaxY = [y1, y2, y3, y4, y5];
+
+  // Custom Cursor Logic
+  const cursorX = useMotionValue(-100);
+  const cursorY = useMotionValue(-100);
+  const cursorXSpring = useSpring(cursorX, { damping: 25, stiffness: 200 });
+  const cursorYSpring = useSpring(cursorY, { damping: 25, stiffness: 200 });
+
+  return (
+    <section 
+      ref={containerRef}
+      id="packages" 
+      className="relative min-h-screen py-32 transition-colors duration-1000 ease-in-out border-b border-black/5 overflow-hidden group/layer"
+      style={{ backgroundColor: hoveredIdx !== null ? '#060a08' : 'var(--bg-primary)' }}
+      onPointerMove={(e) => {
+        cursorX.set(e.clientX - 40); // center the 80px circle
+        cursorY.set(e.clientY - 40);
+      }}
+    >
+      {/* ── Custom View Cursor ── */}
+      <motion.div
+        style={{ x: cursorXSpring, y: cursorYSpring }}
+        className={`fixed top-0 left-0 w-20 h-20 rounded-full flex items-center justify-center pointer-events-none z-[100] transition-opacity duration-500 mix-blend-exclusion
+          ${hoveredIdx !== null ? 'opacity-0 scale-50' : 'opacity-0 group-hover/layer:opacity-100 scale-100'}
+        `}
+      >
+         <span className="text-white text-[10px] uppercase tracking-widest font-space absolute leading-none">
+           Explore
+         </span>
+         <div className="absolute inset-0 border border-white/50 rounded-full shadow-[0_0_15px_rgba(255,255,255,0.2)] animate-spin-slow" />
+      </motion.div>
+
+      {/* ── Floating Watermark ── */}
+      <div className={`absolute inset-0 flex items-center justify-center pointer-events-none z-0 transition-opacity duration-1000 ${hoveredIdx !== null ? 'opacity-0' : 'opacity-[0.03]'}`}>
+        <h2 className="text-[25vw] leading-none font-gallient text-[var(--brand-forest)] whitespace-nowrap transform -rotate-12 mt-20">
+          AYURVEDA
+        </h2>
+      </div>
+
+      {/* ── Hover Background Image Transition ── */}
+      <AnimatePresence>
+        {hoveredIdx !== null && (
           <motion.div
-            style={{ y: scrollTrackY }}
-            className="absolute top-0 left-0 w-full pt-[20vh] pb-[40vh]"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.8, ease: "easeInOut" }}
+            className="absolute inset-0 z-0 pointer-events-none"
           >
-            {/* Header Area */}
-            <motion.div
-              style={{ opacity: titleOpacity, y: titleY }}
-              className="relative z-10 text-center flex flex-col items-center px-4"
-            >
-              <div className="mb-6 flex items-center justify-center w-16 h-16 rounded-full border border-[#8B9D83]/40 bg-[#8B9D83]/10 text-[#8B9D83]">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-                </svg>
-              </div>
-
-              <h2 className="text-5xl sm:text-6xl md:text-[80px] font-gallient text-[#2C4A3B] leading-[1.1] mb-6 drop-shadow-sm">
-                Wellness & <br />
-                <span className="text-[#8B9D83]">Rejuvenation</span>
-              </h2>
-
-              <div className="flex items-center justify-center gap-4 mb-24">
-                <span className="w-12 h-[1px] bg-[#4A5D23]/40" />
-                <p className="font-barlow text-[#4A5D23] uppercase tracking-[0.25em] text-xs sm:text-sm">
-                  Curated Healing Journeys
-                </p>
-                <span className="w-12 h-[1px] bg-[#4A5D23]/40" />
-              </div>
-            </motion.div>
-
-            {/* Empty Packages Grid */}
-            <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-10">
-
-                {/* Empty Card 1 */}
-                <div className="aspect-[4/5] rounded-3xl bg-[#0a1a14]/5 border border-[#2C4A3B]/10 shadow-[0_8px_30px_rgba(0,0,0,0.04)] flex flex-col items-center justify-center p-8 backdrop-blur-sm">
-                  <div className="w-16 h-16 rounded-full bg-[#0a1a14]/10 mb-6 animate-pulse" />
-                  <div className="h-6 w-3/4 bg-[#0a1a14]/10 rounded mb-4 animate-pulse" />
-                  <div className="h-3 w-1/2 bg-[#0a1a14]/10 rounded mb-2 animate-pulse" />
-                  <div className="h-3 w-5/6 bg-[#0a1a14]/10 rounded animate-pulse" />
-                </div>
-
-                {/* Empty Card 2 */}
-                <div className="aspect-[4/5] rounded-3xl bg-[#0a1a14]/5 border border-[#2C4A3B]/10 shadow-[0_8px_30px_rgba(0,0,0,0.04)] flex flex-col items-center justify-center p-8 backdrop-blur-sm mt-0 md:mt-12">
-                  <div className="w-16 h-16 rounded-full bg-[#0a1a14]/10 mb-6 animate-pulse" />
-                  <div className="h-6 w-3/4 bg-[#0a1a14]/10 rounded mb-4 animate-pulse" />
-                  <div className="h-3 w-1/2 bg-[#0a1a14]/10 rounded mb-2 animate-pulse" />
-                  <div className="h-3 w-5/6 bg-[#0a1a14]/10 rounded animate-pulse" />
-                </div>
-
-                {/* Empty Card 3 */}
-                <div className="aspect-[4/5] rounded-3xl bg-[#0a1a14]/5 border border-[#2C4A3B]/10 shadow-[0_8px_30px_rgba(0,0,0,0.04)] flex flex-col items-center justify-center p-8 backdrop-blur-sm mt-0 md:mt-24">
-                  <div className="w-16 h-16 rounded-full bg-[#0a1a14]/10 mb-6 animate-pulse" />
-                  <div className="h-6 w-3/4 bg-[#0a1a14]/10 rounded mb-4 animate-pulse" />
-                  <div className="h-3 w-1/2 bg-[#0a1a14]/10 rounded mb-2 animate-pulse" />
-                  <div className="h-3 w-5/6 bg-[#0a1a14]/10 rounded animate-pulse" />
-                </div>
-
-              </div>
-            </div>
-
+            <Image 
+              src={packageImages[hoveredIdx]} 
+              alt="Dynamic Background" 
+              fill 
+              className="object-cover scale-105"
+              quality={100}
+            />
+            {/* Soft overlay without blur for crisp background */}
+            <div className="absolute inset-0 bg-[#060a08]/40" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#060a08] via-transparent to-transparent" />
           </motion.div>
+        )}
+      </AnimatePresence>
+
+      <div className="container mx-auto px-6 relative z-10">
+        
+        {/* ── Header Reveal ── */}
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.8 }}
+          className="mb-24 flex flex-col items-center text-center gap-6"
+        >
+          <h2 className={`text-5xl md:text-6xl lg:text-7xl font-gallient transition-colors duration-700 ${hoveredIdx !== null ? 'text-white' : 'text-[var(--brand-forest)]'}`}>
+            Signature Journeys
+          </h2>
         </motion.div>
+
+        {/* ── Scattered Editorial Grid ── */}
+        <div className="grid grid-cols-12 gap-x-4 md:gap-x-8 gap-y-16 pb-20 relative">
+          {packages.map((pkg, idx) => {
+            const isHovered = hoveredIdx === idx;
+            const isOtherHovered = hoveredIdx !== null && hoveredIdx !== idx;
+            
+            return (
+              <motion.div 
+                key={pkg.id} 
+                style={{ y: parallaxY[idx] }} // Parallax attach
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-50px" }} // Reveal trigger
+                transition={{ duration: 0.8, delay: idx * 0.1 }}
+                className={getLayoutClasses(idx)}
+                onMouseEnter={() => setHoveredIdx(idx)}
+                onMouseLeave={() => setHoveredIdx(null)}
+              >
+                {/* ── The Card Container ── */}
+                <div 
+                  className={`w-full h-full relative transition-all duration-700 ease-out cursor-pointer group
+                    ${isHovered ? 'bg-[#f7f7eb] shadow-2xl scale-[1.02] z-20' : 'bg-transparent'}
+                    ${isOtherHovered ? 'border border-white/50 border-solid' : 'border border-transparent'}
+                  `}
+                >
+                  {/* Image State */}
+                  <div 
+                    className={`absolute inset-0 overflow-hidden transition-opacity duration-500 ease-in-out
+                      ${isHovered || isOtherHovered ? 'opacity-0' : 'opacity-100'}
+                    `}
+                  >
+                    <Image
+                      src={packageImages[idx]}
+                      alt={pkg.title}
+                      fill
+                      className="object-cover transition-transform duration-1000 ease-out group-hover:scale-105"
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                    />
+                  </div>
+
+                  {/* Details State (White Box) */}
+                  <div 
+                    className={`absolute inset-0 flex flex-col items-center justify-center p-6 md:p-10 text-center transition-opacity duration-700 delay-100 ease-out
+                      ${isHovered ? 'opacity-100' : 'opacity-0 pointer-events-none'}
+                    `}
+                  >
+                    <h3 className="text-2xl md:text-3xl font-gallient text-[var(--brand-forest)] mb-4 uppercase tracking-wider">
+                      {pkg.title}
+                    </h3>
+                    <div className="w-8 h-[1px] bg-[var(--brand-earth)] mb-4" />
+                    
+                    <div className="flex flex-col gap-2 font-space text-xs tracking-[0.2em] uppercase text-[var(--text-secondary)] mb-8">
+                      <span>{pkg.duration}</span>
+                      <span className="font-semibold text-[var(--brand-forest)]">₹{pkg.price}</span>
+                    </div>
+                    
+                    {/* Magnetic Button */}
+                    <MagneticButton>Discover</MagneticButton>
+                  </div>
+                </div>
+
+                {/* Subtitle */}
+                <div className="absolute -bottom-8 md:-bottom-10 left-0 right-0 flex items-start justify-between pointer-events-none z-0">
+                  <p className={`font-space tracking-[0.15em] uppercase text-[10px] md:text-xs font-semibold transition-colors duration-700 max-w-[85%] leading-tight
+                    ${hoveredIdx !== null ? 'text-white drop-shadow-md' : 'text-[var(--text-primary)]'}
+                  `}>
+                    {pkg.title}
+                  </p>
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
       </div>
     </section>
   );
 }
-
-
-<div>
-
-</div>

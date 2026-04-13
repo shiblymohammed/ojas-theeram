@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Barlow_Condensed } from "next/font/google";
+import { Geist, Geist_Mono, Barlow_Condensed, Cormorant_Garamond, Space_Grotesk } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
 
@@ -20,6 +20,20 @@ const barlowCondensed = Barlow_Condensed({
   variable: "--font-barlow-condensed",
 });
 
+const cormorantGaramond = Cormorant_Garamond({
+  weight: ["300", "400", "500", "600", "700"],
+  style: ["normal", "italic"],
+  subsets: ["latin"],
+  variable: "--font-cormorant-garamond",
+});
+
+const spaceGrotesk = Space_Grotesk({
+  weight: ["300", "400", "500", "600", "700"],
+  style: ["normal"],
+  subsets: ["latin"],
+  variable: "--font-space-grotesk",
+});
+
 const gallient = localFont({
   src: "../../public/fonts/GallientRegular.ttf",
   variable: "--font-gallient",
@@ -33,6 +47,7 @@ export const metadata: Metadata = {
 
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import SmoothScrolling from "@/components/shared/SmoothScrolling";
 
 export default function RootLayout({
   children,
@@ -42,14 +57,16 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${barlowCondensed.variable} ${gallient.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${barlowCondensed.variable} ${gallient.variable} ${cormorantGaramond.variable} ${spaceGrotesk.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans" suppressHydrationWarning>
-        <Navbar />
-        <main className="flex-grow">
-          {children}
-        </main>
-        <Footer />
+        <SmoothScrolling>
+          <Navbar />
+          <main className="flex-grow">
+            {children}
+          </main>
+          <Footer />
+        </SmoothScrolling>
       </body>
     </html>
   );

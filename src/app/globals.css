@@ -2,39 +2,75 @@
 
 :root {
   /* Background Colors */
-  --bg-primary: #dadbd5;
+  --bg-primary: #f7f7eb;
   --bg-secondary: #ffffff;
   --bg-tertiary: #f3eee8;
   --bg-alpha: #3a4443;
+  --bg-primary-hover: #cacad4;
 
   /* Text Colors */
   --text-primary: #292929;
   --text-secondary: #383837;
   --text-alpha: #b3b5b6;
+
+  /* Brand Colors */
+  --brand-forest: #2C4A3B;
+  --brand-sand: #d4c8af;
+  --brand-earth: #8f7c6b;
+
+  /* Semantic Colors */
+  --color-success: #4A7c59;
+  --color-error: #A04A4A;
+  --color-warning: #D99A41;
+
+  /* Radii */
+  --radius-base: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+
+  /* Shadows */
+  --shadow-soft: 0 10px 40px -10px rgba(44, 74, 59, 0.1);
+  --shadow-float: 0 20px 50px -10px rgba(44, 74, 59, 0.15);
 }
 
 @theme inline {
-  /* 
-    Tailwind generates ALL utilities for a color.
-    By naming them with bg- and text- prefixes, 
-    you get `bg-bg-primary` and `text-text-primary`.
-    This prevents conflicts where `bg-primary` and `text-primary`
-    would otherwise try to share the exact same hex code.
-  */
+  /* Colors */
   --color-bg-primary: var(--bg-primary);
   --color-bg-secondary: var(--bg-secondary);
   --color-bg-tertiary: var(--bg-tertiary);
   --color-bg-alpha: var(--bg-alpha);
+  --color-bg-primary-hover: var(--bg-primary-hover);
 
   --color-text-primary: var(--text-primary);
   --color-text-secondary: var(--text-secondary);
   --color-text-alpha: var(--text-alpha);
+
+  --color-brand-forest: var(--brand-forest);
+  --color-brand-sand: var(--brand-sand);
+  --color-brand-earth: var(--brand-earth);
+
+  --color-success: var(--color-success);
+  --color-error: var(--color-error);
+  --color-warning: var(--color-warning);
+
+  /* Radii */
+  --radius-base: var(--radius-base);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+
+  /* Shadows */
+  --shadow-soft: var(--shadow-soft);
+  --shadow-float: var(--shadow-float);
 
   /* Fonts mapped previously */
   --font-barlow: var(--font-barlow-condensed);
   --font-gallient: var(--font-gallient);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-cormorant: var(--font-cormorant-garamond);
+  --font-space: var(--font-space-grotesk);
 }
 
 /* Base element defaults */
