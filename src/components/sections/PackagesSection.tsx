@@ -87,16 +87,27 @@ export default function PackagesSection() {
   const cursorYSpring = useSpring(cursorY, { damping: 25, stiffness: 200 });
 
   return (
-    <section 
+    <section
       ref={containerRef}
-      id="packages" 
+      id="packages"
       className="relative min-h-screen py-32 transition-colors duration-1000 ease-in-out border-b border-black/5 overflow-hidden group/layer"
-      style={{ backgroundColor: hoveredIdx !== null ? '#060a08' : 'var(--bg-primary)' }}
+      style={{ backgroundColor: hoveredIdx !== null ? '#060a08' : 'var(--bg-secondary)' }}
       onPointerMove={(e) => {
         cursorX.set(e.clientX - 40); // center the 80px circle
         cursorY.set(e.clientY - 40);
       }}
     >
+      {/* ── Gradient Blurred Background Elements (Non-Hover State) ── */}
+      <div
+        className={`absolute inset-0 pointer-events-none transition-opacity duration-1000 ease-in-out ${hoveredIdx !== null ? 'opacity-0' : 'opacity-100'}`}
+      >
+        {/* Green/Forest Blob top right */}
+        <div className="absolute top-0 right-0 w-[500px] md:w-[800px] h-[500px] md:h-[800px] bg-[var(--brand-forest)] rounded-full blur-[120px] md:blur-[160px] opacity-[0.12] translate-x-1/4 -translate-y-1/4" />
+
+        {/* Brand Sand Blob bottom left */}
+        <div className="absolute bottom-0 left-0 w-[500px] md:w-[800px] h-[500px] md:h-[800px] bg-[var(--brand-sand)] rounded-full blur-[120px] md:blur-[160px] opacity-[0.15] -translate-x-1/4 translate-y-1/4" />
+      </div>
+
       {/* ── Custom View Cursor ── */}
       <motion.div
         style={{ x: cursorXSpring, y: cursorYSpring }}
@@ -104,10 +115,10 @@ export default function PackagesSection() {
           ${hoveredIdx !== null ? 'opacity-0 scale-50' : 'opacity-0 group-hover/layer:opacity-100 scale-100'}
         `}
       >
-         <span className="text-white text-[10px] uppercase tracking-widest font-space absolute leading-none">
-           Explore
-         </span>
-         <div className="absolute inset-0 border border-white/50 rounded-full shadow-[0_0_15px_rgba(255,255,255,0.2)] animate-spin-slow" />
+        <span className="text-white text-[10px] uppercase tracking-widest font-space absolute leading-none">
+          Explore
+        </span>
+        <div className="absolute inset-0 border border-white/50 rounded-full shadow-[0_0_15px_rgba(255,255,255,0.2)] animate-spin-slow" />
       </motion.div>
 
       {/* ── Floating Watermark ── */}
@@ -127,10 +138,10 @@ export default function PackagesSection() {
             transition={{ duration: 0.8, ease: "easeInOut" }}
             className="absolute inset-0 z-0 pointer-events-none"
           >
-            <Image 
-              src={packageImages[hoveredIdx]} 
-              alt="Dynamic Background" 
-              fill 
+            <Image
+              src={packageImages[hoveredIdx]}
+              alt="Dynamic Background"
+              fill
               className="object-cover scale-105"
               quality={100}
             />
@@ -142,9 +153,9 @@ export default function PackagesSection() {
       </AnimatePresence>
 
       <div className="container mx-auto px-6 relative z-10">
-        
+
         {/* ── Header Reveal ── */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
@@ -161,10 +172,10 @@ export default function PackagesSection() {
           {packages.map((pkg, idx) => {
             const isHovered = hoveredIdx === idx;
             const isOtherHovered = hoveredIdx !== null && hoveredIdx !== idx;
-            
+
             return (
-              <motion.div 
-                key={pkg.id} 
+              <motion.div
+                key={pkg.id}
                 style={{ y: parallaxY[idx] }} // Parallax attach
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -175,14 +186,14 @@ export default function PackagesSection() {
                 onMouseLeave={() => setHoveredIdx(null)}
               >
                 {/* ── The Card Container ── */}
-                <div 
+                <div
                   className={`w-full h-full relative transition-all duration-700 ease-out cursor-pointer group
                     ${isHovered ? 'bg-[#f7f7eb] shadow-2xl scale-[1.02] z-20' : 'bg-transparent'}
                     ${isOtherHovered ? 'border border-white/50 border-solid' : 'border border-transparent'}
                   `}
                 >
                   {/* Image State */}
-                  <div 
+                  <div
                     className={`absolute inset-0 overflow-hidden transition-opacity duration-500 ease-in-out
                       ${isHovered || isOtherHovered ? 'opacity-0' : 'opacity-100'}
                     `}
@@ -197,7 +208,7 @@ export default function PackagesSection() {
                   </div>
 
                   {/* Details State (White Box) */}
-                  <div 
+                  <div
                     className={`absolute inset-0 flex flex-col items-center justify-center p-6 md:p-10 text-center transition-opacity duration-700 delay-100 ease-out
                       ${isHovered ? 'opacity-100' : 'opacity-0 pointer-events-none'}
                     `}
@@ -206,12 +217,12 @@ export default function PackagesSection() {
                       {pkg.title}
                     </h3>
                     <div className="w-8 h-[1px] bg-[var(--brand-earth)] mb-4" />
-                    
+
                     <div className="flex flex-col gap-2 font-space text-xs tracking-[0.2em] uppercase text-[var(--text-secondary)] mb-8">
                       <span>{pkg.duration}</span>
                       <span className="font-semibold text-[var(--brand-forest)]">₹{pkg.price}</span>
                     </div>
-                    
+
                     {/* Magnetic Button */}
                     <MagneticButton>Discover</MagneticButton>
                   </div>
