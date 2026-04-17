@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Mail, Phone, MapPin, ArrowRight } from "lucide-react";
+import { clinic } from "@/data/clinic";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -42,10 +43,16 @@ export default function Footer() {
           <div>
             <h4 className="text-xl font-cormorant text-white mb-6">Quick Links</h4>
             <ul className="space-y-4">
-              {['Home', 'About Us', 'Treatments', 'Packages', 'Apothecary', 'Contact'].map((item) => (
-                <li key={item}>
-                  <Link href="#" className="inline-block text-[var(--bg-tertiary)]/80 text-sm hover:text-white transition-colors relative group font-light">
-                    {item}
+              {[
+                { name: 'Home', href: '/' },
+                { name: 'About Us', href: '/about' },
+                { name: 'Treatments', href: '/treatments' },
+                { name: 'Packages & Booking', href: '/booking' },
+                { name: 'Contact', href: '/contact' }
+              ].map((item) => (
+                <li key={item.name}>
+                  <Link href={item.href} className="inline-block text-[var(--bg-tertiary)]/80 text-sm hover:text-white transition-colors relative group font-light">
+                    {item.name}
                     <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[var(--brand-sand)] transition-all duration-300 group-hover:w-full"></span>
                   </Link>
                 </li>
@@ -60,17 +67,16 @@ export default function Footer() {
               <li className="flex items-start gap-4">
                 <MapPin className="w-5 h-5 text-[var(--brand-sand)] shrink-0 mt-0.5" />
                 <span className="text-[var(--bg-tertiary)]/80 text-sm leading-relaxed font-light">
-                  Ayurvedic Heritage Resort,<br />
-                  Kerala, India
+                  {clinic.address}
                 </span>
               </li>
               <li className="flex items-center gap-4">
                 <Phone className="w-5 h-5 text-[var(--brand-sand)] shrink-0" />
-                <span className="text-[var(--bg-tertiary)]/80 text-sm font-light">+91 98765 43210</span>
+                <span className="text-[var(--bg-tertiary)]/80 text-sm font-light">{clinic.phone[0]}</span>
               </li>
               <li className="flex items-center gap-4">
                 <Mail className="w-5 h-5 text-[var(--brand-sand)] shrink-0" />
-                <span className="text-[var(--bg-tertiary)]/80 text-sm font-light">namaste@ojastheeram.com</span>
+                <span className="text-[var(--bg-tertiary)]/80 text-sm font-light">info@ojastheeram.com</span>
               </li>
             </ul>
           </div>

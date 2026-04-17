@@ -55,6 +55,7 @@ export const metadata: Metadata = {
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import SmoothScrolling from "@/components/shared/SmoothScrolling";
+import Loader from "@/components/shared/Loader";
 
 export default function RootLayout({
   children,
@@ -67,6 +68,7 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} ${barlowCondensed.variable} ${gallient.variable} ${cormorantGaramond.variable} ${spaceGrotesk.variable} ${instrumentSerif.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans" suppressHydrationWarning>
+        <Loader />
         <SmoothScrolling>
           <Navbar />
           <main className="flex-grow">

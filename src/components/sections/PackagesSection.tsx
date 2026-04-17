@@ -62,7 +62,7 @@ function MagneticButton({ children }: { children: React.ReactNode }) {
 }
 
 // ── Main Section ──
-export default function PackagesSection() {
+export default function PackagesSection({ transparentBg = false }: { transparentBg?: boolean }) {
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -86,27 +86,37 @@ export default function PackagesSection() {
   const cursorXSpring = useSpring(cursorX, { damping: 25, stiffness: 200 });
   const cursorYSpring = useSpring(cursorY, { damping: 25, stiffness: 200 });
 
+  // Background color logic: transparent mode (over blurred intro BG) vs standalone
+  const getBgColor = () => {
+    if (transparentBg) {
+      return hoveredIdx !== null ? '#060a08' : 'rgba(247, 247, 235, 0.85)';
+    }
+    return hoveredIdx !== null ? '#060a08' : 'var(--bg-secondary)';
+  };
+
   return (
     <section
       ref={containerRef}
       id="packages"
-      className="relative min-h-screen py-32 transition-colors duration-1000 ease-in-out border-b border-black/5 overflow-hidden group/layer"
-      style={{ backgroundColor: hoveredIdx !== null ? '#060a08' : 'var(--bg-secondary)' }}
+      className={`relative min-h-screen py-32 transition-colors duration-1000 ease-in-out border-b border-black/5 overflow-hidden group/layer z-10 ${transparentBg ? 'backdrop-blur-xl' : ''}`}
+      style={{ backgroundColor: getBgColor() }}
       onPointerMove={(e) => {
         cursorX.set(e.clientX - 40); // center the 80px circle
         cursorY.set(e.clientY - 40);
       }}
     >
-      {/* ── Gradient Blurred Background Elements (Non-Hover State) ── */}
-      <div
-        className={`absolute inset-0 pointer-events-none transition-opacity duration-1000 ease-in-out ${hoveredIdx !== null ? 'opacity-0' : 'opacity-100'}`}
-      >
-        {/* Green/Forest Blob top right */}
-        <div className="absolute top-0 right-0 w-[500px] md:w-[800px] h-[500px] md:h-[800px] bg-[var(--brand-forest)] rounded-full blur-[120px] md:blur-[160px] opacity-[0.12] translate-x-1/4 -translate-y-1/4" />
+      {/* ── Gradient Blurred Background Elements (Non-Hover State, hidden in transparent mode) ── */}
+      {!transparentBg && (
+        <div
+          className={`absolute inset-0 pointer-events-none transition-opacity duration-1000 ease-in-out ${hoveredIdx !== null ? 'opacity-0' : 'opacity-100'}`}
+        >
+          {/* Green/Forest Blob top right */}
+          <div className="absolute top-0 right-0 w-[500px] md:w-[800px] h-[500px] md:h-[800px] bg-[var(--brand-forest)] rounded-full blur-[120px] md:blur-[160px] opacity-[0.12] translate-x-1/4 -translate-y-1/4" />
 
-        {/* Brand Sand Blob bottom left */}
-        <div className="absolute bottom-0 left-0 w-[500px] md:w-[800px] h-[500px] md:h-[800px] bg-[var(--brand-sand)] rounded-full blur-[120px] md:blur-[160px] opacity-[0.15] -translate-x-1/4 translate-y-1/4" />
-      </div>
+          {/* Brand Sand Blob bottom left */}
+          <div className="absolute bottom-0 left-0 w-[500px] md:w-[800px] h-[500px] md:h-[800px] bg-[var(--brand-sand)] rounded-full blur-[120px] md:blur-[160px] opacity-[0.15] -translate-x-1/4 translate-y-1/4" />
+        </div>
+      )}
 
       {/* ── Custom View Cursor ── */}
       <motion.div
@@ -123,7 +133,7 @@ export default function PackagesSection() {
 
       {/* ── Floating Watermark ── */}
       <div className={`absolute inset-0 flex items-center justify-center pointer-events-none z-0 transition-opacity duration-1000 ${hoveredIdx !== null ? 'opacity-0' : 'opacity-[0.03]'}`}>
-        <h2 className="text-[25vw] leading-none font-gallient text-[var(--brand-forest)] whitespace-nowrap transform -rotate-12 mt-20">
+        <h2 className={`text-[25vw] leading-none font-gallient whitespace-nowrap transform -rotate-12 mt-20 text-[var(--brand-forest)]`}>
           AYURVEDA
         </h2>
       </div>
@@ -162,7 +172,9 @@ export default function PackagesSection() {
           transition={{ duration: 0.8 }}
           className="mb-24 flex flex-col items-center text-center gap-6"
         >
-          <h2 className={`text-5xl md:text-6xl lg:text-7xl font-gallient transition-colors duration-700 ${hoveredIdx !== null ? 'text-white' : 'text-[var(--brand-forest)]'}`}>
+          <h2 className={`text-5xl md:text-6xl lg:text-7xl font-gallient transition-colors duration-700 ${
+            hoveredIdx !== null ? 'text-white' : 'text-[var(--brand-forest)]'
+          }`}>
             Signature Journeys
           </h2>
         </motion.div>

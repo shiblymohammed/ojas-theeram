@@ -1,6 +1,5 @@
 import HeroSection from "@/components/sections/HeroSection";
 import IntroSection from "@/components/sections/IntroSection";
-import PackagesSection from "@/components/sections/PackagesSection";
 import ConditionsSection from "@/components/sections/ConditionsSection";
 import HowItWorksSection from "@/components/sections/HowItWorksSection";
 import TreatmentsPreview from "@/components/sections/TreatmentsPreview";
@@ -18,11 +17,8 @@ export default function Home() {
       {/* 1. HERO SECTION */}
       <HeroSection />
 
-      {/* 2. SCROLL EXPERIENCE TRANSITION */}
+      {/* 2. SCROLL EXPERIENCE + PACKAGES (combined scroll) */}
       <IntroSection />
-
-      {/* 3. SIGNATURE PACKAGES */}
-      <PackagesSection />
 
       {/* 4. CONDITIONS WE TREAT */}
       <ConditionsSection />
@@ -43,7 +39,7 @@ export default function Home() {
       <ProductsPreview />
 
       {/* 10. TESTIMONIALS */}
-      <TestimonialsSection />
+      {/* <TestimonialsSection /> */}
 
       {/* 11. WHY CHOOSE US */}
       <WhyChooseUs />
