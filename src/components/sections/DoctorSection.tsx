@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
+import { leadPhysician } from "@/data/doctors";
 
 export default function DoctorSection() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -47,26 +48,24 @@ export default function DoctorSection() {
                 Lead Physician
               </span>
               <h2 className="text-4xl md:text-5xl lg:text-7xl font-gallient text-[var(--brand-forest)] leading-[0.9] mb-6">
-                Dr. Anu <br/> <span className="text-[2rem] md:text-[3rem] text-[#8c7f70]">BAMS, MD</span>
+                {leadPhysician.name} <br/> <span className="text-[2rem] md:text-[3rem] text-[#8c7f70]">{leadPhysician.qualifications}</span>
               </h2>
               <p className="text-sm md:text-base font-sans font-light text-[var(--text-secondary)] leading-relaxed max-w-md">
-                With over a decade of profound experience in authentic Ayurvedic healing, Dr. Anu leads Ojas Theeram with a philosophy deeply rooted in ancient classical texts and intuitive modern diagnostics. 
+                {leadPhysician.biography}
               </p>
               
               <div className="mt-10 md:mt-16 flex gap-8 md:gap-12 pb-8 border-b border-[var(--brand-forest)]/10">
-                <div>
-                  <h4 className="text-3xl md:text-4xl font-gallient text-[var(--brand-forest)]">15+</h4>
-                  <p className="font-space text-[9px] tracking-[0.2em] uppercase text-[var(--brand-sand)] mt-2">Years Exp.</p>
-                </div>
-                <div>
-                  <h4 className="text-3xl md:text-4xl font-gallient text-[var(--brand-forest)]">5k+</h4>
-                  <p className="font-space text-[9px] tracking-[0.2em] uppercase text-[var(--brand-sand)] mt-2">Healed</p>
-                </div>
+                {leadPhysician.stats?.map((stat, index) => (
+                  <div key={index}>
+                    <h4 className="text-3xl md:text-4xl font-gallient text-[var(--brand-forest)]">{stat.value}</h4>
+                    <p className="font-space text-[9px] tracking-[0.2em] uppercase text-[var(--brand-sand)] mt-2">{stat.label}</p>
+                  </div>
+                ))}
               </div>
 
                <div className="mt-8">
                   <button className="group flex items-center gap-4 text-[10px] md:text-xs font-space tracking-[0.2em] uppercase text-[var(--brand-forest)] hover:text-[var(--brand-sand)] transition-colors">
-                    <span>Consult Dr. Anu</span>
+                    <span>Consult {leadPhysician.name}</span>
                     <span className="w-8 h-[1px] bg-[var(--brand-forest)] group-hover:bg-[var(--brand-sand)] transition-colors"></span>
                   </button>
                </div>
@@ -86,10 +85,9 @@ export default function DoctorSection() {
           </div>
 
           <motion.div className="absolute inset-0 z-0">
-            {/* Replace with actual Doctor Image */}
             <Image 
-              src="/images/intro/face.png" 
-              alt="Dr. Anu"
+              src={leadPhysician.image} 
+              alt={leadPhysician.name}
               fill
               className="object-cover object-center grayscale-[15%] opacity-90"
               quality={90}
@@ -103,3 +101,4 @@ export default function DoctorSection() {
     </section>
   );
 }
+

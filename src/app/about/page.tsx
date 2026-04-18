@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { Leaf, Heart, Shield, Sparkles, ArrowRight } from "lucide-react";
+import { leadPhysician } from "@/data/doctors";
 
 const fadeUp = {
   initial: { opacity: 0, y: 40 },
@@ -162,6 +163,8 @@ export default function AboutPage() {
         </div>
       </section>
 
+// ... existing code ...
+
       {/* ─── DOCTOR SECTION ─── */}
       <section className="py-24 bg-[var(--brand-forest)] text-white overflow-hidden">
         <div className="container mx-auto px-6 md:px-12 max-w-6xl">
@@ -177,50 +180,40 @@ export default function AboutPage() {
                 {...fadeUp}
                 className="font-cormorant text-3xl md:text-4xl lg:text-5xl leading-tight"
               >
-                Led by Expertise,
+                {leadPhysician.name},
                 <br />
                 <span className="font-gallient italic text-[var(--brand-sand)]">
-                  Driven by Compassion
+                  {leadPhysician.role}
                 </span>
               </motion.h2>
               <motion.p
                 {...fadeUp}
                 className="text-white/80 leading-relaxed font-light"
               >
-                Our clinic is helmed by a qualified B.A.M.S. physician with deep
-                expertise in Panchakarma therapies and chronic disease
-                management. With years of clinical experience and a commitment
-                to authentic Ayurvedic practice, every treatment plan is
-                meticulously designed to address your unique constitution and
-                health goals.
+                {leadPhysician.biography}
               </motion.p>
               <motion.div {...fadeUp} className="flex flex-wrap gap-6 pt-4">
                 <div className="space-y-1">
                   <span className="font-gallient text-3xl text-[var(--brand-sand)]">
-                    B.A.M.S.
+                    {leadPhysician.qualifications}
                   </span>
                   <p className="text-[10px] font-space tracking-widest uppercase text-white/60">
                     Qualified Physician
                   </p>
                 </div>
-                <div className="w-px bg-white/20" />
-                <div className="space-y-1">
-                  <span className="font-gallient text-3xl text-[var(--brand-sand)]">
-                    1000+
-                  </span>
-                  <p className="text-[10px] font-space tracking-widest uppercase text-white/60">
-                    Patients Treated
-                  </p>
-                </div>
-                <div className="w-px bg-white/20" />
-                <div className="space-y-1">
-                  <span className="font-gallient text-3xl text-[var(--brand-sand)]">
-                    Kerala
-                  </span>
-                  <p className="text-[10px] font-space tracking-widest uppercase text-white/60">
-                    Tradition
-                  </p>
-                </div>
+                {leadPhysician.stats?.map((stat, index) => (
+                  <div key={index} className="flex gap-6 items-center">
+                    <div className="w-px bg-white/20 h-8" />
+                    <div className="space-y-1">
+                      <span className="font-gallient text-3xl text-[var(--brand-sand)]">
+                        {stat.value}
+                      </span>
+                      <p className="text-[10px] font-space tracking-widest uppercase text-white/60">
+                        {stat.label}
+                      </p>
+                    </div>
+                  </div>
+                ))}
               </motion.div>
             </div>
 
@@ -229,8 +222,8 @@ export default function AboutPage() {
               className="relative aspect-[3/4] rounded-2xl overflow-hidden order-1 lg:order-2"
             >
               <Image
-                src="/images/other/doctor-portrait.png"
-                alt="Our Doctor"
+                src={leadPhysician.image}
+                alt={leadPhysician.name}
                 fill
                 className="object-cover"
                 sizes="(max-width: 1024px) 100vw, 50vw"
@@ -240,6 +233,7 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
+
 
       {/* ─── VALUES ─── */}
       <section className="py-24 md:py-36">

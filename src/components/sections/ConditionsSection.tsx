@@ -60,26 +60,26 @@ export default function ConditionsSection() {
   const entryY = useTransform(entryProgress, [0, 1], ["-100vh", "0vh"]);
 
   // Transitions: 
-  // 0 to 0.35: Conditions Woman showing cleanly.
-  // 0.35 to 0.45: Blurring, Woman fading out, Journey fading in.
-  // 0.45 to 0.85: Slider interactive.
-  // 0.85 to 1.0: Dead-scrolling overlapping space.
-  const womanOpacity = useTransform(scrollYProgress, [0, 0.15, 0.3, 1], [1, 1, 0, 0]);
+  // 0 to 0.25: Conditions Woman showing cleanly.
+  // 0.25 to 0.45: SLOW Fade/Blur transition into How It Works.
+  // 0.45 to 0.55: Stability - User sees "Path to Wellness" header.
+  // 0.55 to 0.88: Slider interactive phases.
+  // 0.88 to 1.0: Dead-scrolling overlapping space for next section.
+  const womanOpacity = useTransform(scrollYProgress, [0, 0.25, 0.45, 1], [1, 1, 0, 0]);
   
-  // Safely apply blur over the entire rest of the scroll to keep bgWOMAN.png softly visible
-  const blurFilter = useTransform(scrollYProgress, [0, 0.15, 0.3, 1], ["blur(0px)", "blur(0px)", "blur(15px)", "blur(15px)"]);
-  const scaleEffect = useTransform(scrollYProgress, [0, 0.15, 0.3, 1], [1, 1, 1.15, 1.15]);
+  // Safely apply blur over the transition to keep bgWOMAN.png softly visible
+  const blurFilter = useTransform(scrollYProgress, [0, 0.25, 0.45, 1], ["blur(0px)", "blur(0px)", "blur(15px)", "blur(15px)"]);
+  const scaleEffect = useTransform(scrollYProgress, [0, 0.25, 0.45, 1], [1, 1, 1.15, 1.15]);
   
-  const howItWorksOpacity = useTransform(scrollYProgress, [0, 0.15, 0.3, 1], [0, 0, 1, 1]);
+  const howItWorksOpacity = useTransform(scrollYProgress, [0, 0.25, 0.45, 1], [0, 0, 1, 1]);
   // Prevent any interaction block when opacity is 0
-  const howItWorksPointer = useTransform(howItWorksOpacity, (val) => val > 0 ? "auto" : "none");
+  const howItWorksPointer = useTransform(howItWorksOpacity, (val) => val > 0.5 ? "auto" : "none");
 
-  // PLATEAU MAPPING: Spreading the 5 slides over the 0.45 to 0.85 scroll bound. 
-  // Notice we END at 0.85 and lock into 4 from 0.85 to 1.0! This creates the pure dead scroll 
-  // space that the overlapping Treatments split-section uses.
+  // PLATEAU MAPPING: Spreading the 5 slides over the 0.55 to 0.88 scroll bound. 
+  // Notice we END at 0.88 and lock into 4 from 0.88 to 1.0! This creates the pure dead scroll 
   const rawActiveFloat = useTransform(
     scrollYProgress,
-    [0.35, 0.41, 0.43, 0.49, 0.51, 0.57, 0.59, 0.65, 0.67, 0.75, 1.0],
+    [0.55, 0.58, 0.61, 0.65, 0.68, 0.72, 0.75, 0.79, 0.82, 0.88, 1.0],
     [   0,    0,    1,    1,    2,    2,    3,    3,    4,    4,   4]
   );
   
@@ -135,7 +135,7 @@ export default function ConditionsSection() {
             />
           </motion.div>
 
-          {/* Anu Signature Text on Right Bottom */}
+          {/* Arun Signature Text on Right Bottom */}
           <motion.div 
             className="absolute bottom-16 md:bottom-24 right-8 md:right-16 z-30"
             style={{ x: textX, y: textY }}
@@ -145,7 +145,7 @@ export default function ConditionsSection() {
                    Authentic Care
                 </h2>
                 <h3 className="text-[#f2ebe1] text-5xl md:text-7xl font-gallient tracking-wider drop-shadow-2xl">
-                  Anu Signature
+                  Arun Signature
                 </h3>
              </div>
           </motion.div>
@@ -343,3 +343,5 @@ function Slide({ step, index, activeFloat }: { step: any, index: number, activeF
     </motion.div>
   );
 }
+
+
