@@ -30,7 +30,7 @@ export default function ProductsPreview() {
     <section 
       ref={containerRef} 
       id="products" 
-      className="relative w-full h-screen overflow-hidden flex items-center justify-center lg:justify-start"
+      className="relative w-full h-[100svh] lg:h-screen overflow-hidden flex items-center justify-center lg:justify-start"
     >
       {/* 1. Base Background Image (Full Screen) */}
       <motion.div 

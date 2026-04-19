@@ -122,7 +122,7 @@ export default function ConditionsSection() {
       className="relative w-full h-[900vh] bg-[#050806] font-sans z-0"
     >
       <motion.div 
-        className="sticky top-0 w-full h-screen overflow-hidden p-0 m-0 will-change-transform"
+        className="sticky top-0 w-full h-[100svh] lg:h-screen overflow-hidden p-0 m-0 will-change-transform"
         style={{ y: entryY }}
       >
         {/* === 1. UNIFIED BACKGROUND === */}
