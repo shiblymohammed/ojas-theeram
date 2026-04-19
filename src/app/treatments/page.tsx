@@ -58,7 +58,7 @@ export default function TreatmentsPage() {
   };
 
   // Memoize icon map to prevent recreation
-  const iconMap = useMemo(() => ({
+  const iconMap = useMemo<Record<string, React.ElementType>>(() => ({
     Activity,
     Heart,
     Scale,
