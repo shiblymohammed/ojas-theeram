@@ -103,6 +103,13 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://ojastheeram.com",
   },
+  icons: {
+    icon: [
+      { url: "/favicon.png", type: "image/png" },
+    ],
+    apple: "/favicon.png",
+    shortcut: "/favicon.png",
+  },
 };
 
 import Navbar from "@/components/layout/Navbar";
