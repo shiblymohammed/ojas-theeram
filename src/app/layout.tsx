@@ -50,6 +50,9 @@ const gallient = localFont({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://ojastheeram.com"),
+  verification: {
+    google: "iugd9wH6dysssv8mqxCnu2pa7qwxlUemKzjRlbSjD9s",
+  },
   title: {
     default: "Ojas Theeram | Authentic Ayurvedic Wellness Clinic, Bengaluru",
     template: "%s | Ojas Theeram",
