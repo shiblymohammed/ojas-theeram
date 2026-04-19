@@ -39,7 +39,7 @@ export default function AdvancedCareSection() {
         <div className="absolute inset-0 z-0 bg-[#050806] overflow-hidden">
           <motion.div className="absolute inset-0 w-full h-full z-0" style={{ scale: bgScale, transformOrigin: 'center center' }}>
             <Image 
-              src="/images/BACKGROUND/advanced_care.png"
+              src="/images/BACKGROUND/advanced_care.webp"
               alt="Advanced Specialized Care"
               fill
               className="object-cover object-center opacity-40 mix-blend-luminosity"

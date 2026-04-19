@@ -178,41 +178,41 @@ export const advancedCare = [
     title: "Swarna Bindu Prashana",
     subtitle: "Integrative pediatric immunity booster designed for childhood wellness.",
     features: ["Boosts Memory & Intellect", "Enhances Digestive Fire", "Promotes Physical Strength"],
-    image: "/images/advanced-care/immunity.png"
+    image: "/images/advanced-care/immunity.webp"
   },
   {
     id: "ac-2",
     title: "Neuro-Rehabilitation",
     subtitle: "Specialized care for Paralysis, Stroke Recovery & Bell’s Palsy.",
     features: ["Motor Function Restoration", "Muscle Relaxation Therapy", "Nerve Stimulation"],
-    image: "/images/advanced-care/neuro.png"
+    image: "/images/advanced-care/neuro.webp"
   },
   {
     id: "ac-3",
     title: "Clinical Dermatology",
     subtitle: "Advanced Ayurvedic formulations for Skin Diseases including Psoriasis & Allergies.",
     features: ["Blood Purification (Rakta Mokshana)", "Toxin Elimination", "Soothes Inflammation"],
-    image: "/images/advanced-care/dermatology.png"
+    image: "/images/advanced-care/dermatology.webp"
   },
   {
     id: "ac-4",
     title: "Metabolic & Hepatic Care",
     subtitle: "Targeted interventions for Fatty Liver, Cholesterol Management & Digestion.",
     features: ["Liver Detoxification", "Metabolism Correction", "Lipid Profile Management"],
-    image: "/images/advanced-care/metabolic.png"
+    image: "/images/advanced-care/metabolic.webp"
   },
   {
     id: "ac-5",
     title: "Diabetic Wound Care",
     subtitle: "Specialized treatments accelerating recovery for Non-Healing Wounds.",
     features: ["Anti-Microbial Herbo-Mineral Applications", "Tissue Regeneration", "Vrana Ropana"],
-    image: "/images/advanced-care/woundcare.png"
+    image: "/images/advanced-care/woundcare.webp"
   },
   {
     id: "ac-6",
     title: "Renal & Urological Detox",
     subtitle: "Therapeutic protocols for UTI, Kidney Health & Complete Body Detoxification.",
     features: ["Flushes Out Toxins", "Balances Doshas", "Improves Renal Function"],
-    image: "/images/advanced-care/renal.png"
+    image: "/images/advanced-care/renal.webp"
   }
 ];

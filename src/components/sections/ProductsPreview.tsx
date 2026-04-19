@@ -39,7 +39,7 @@ export default function ProductsPreview() {
       >
         {/* Desktop Background */}
         <Image 
-          src="/images/products/proucts_base_bg.png"
+          src="/images/products/proucts_base_bg.webp"
           alt="Product Background Environment"
           fill
           className="object-cover object-center hidden md:block"
@@ -49,7 +49,7 @@ export default function ProductsPreview() {
         />
         {/* Mobile Background */}
         <Image 
-          src="/images/products/products_base_mobile_bg.png"
+          src="/images/products/products_base_mobile_bg.webp"
           alt="Product Background Environment Mobile"
           fill
           className="object-cover object-center md:hidden"
@@ -108,7 +108,7 @@ export default function ProductsPreview() {
       >
         {/* Desktop Product Cutout */}
         <Image 
-          src="/images/products/herbal_tea.png"
+          src="/images/products/herbal_tea.webp"
           alt={product.name}
           fill
           className="object-cover object-center hidden md:block"
@@ -118,7 +118,7 @@ export default function ProductsPreview() {
         />
         {/* Mobile Product Cutout (Scaled up aggressively for depth) */}
         <Image 
-          src="/images/products/herbal_tea_mobile.png"
+          src="/images/products/herbal_tea_mobile.webp"
           alt={product.name}
           fill
           className="object-cover object-bottom scale-[1.2] transform-gpu translate-y-[2%] md:hidden"

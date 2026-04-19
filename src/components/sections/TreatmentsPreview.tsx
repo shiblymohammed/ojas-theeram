@@ -8,11 +8,11 @@ import { therapies, panchakarma } from "@/data/treatments";
 
 // Combine a few featured treatments for the preview
 const featuredTreatments = [
-  { ...panchakarma[0], type: "Panchakarma Detox", image: "/images/packages/package-a.png", desc: "Therapeutic emesis for respiratory and upper gastrointestinal reset." },
-  { ...therapies[0], type: "Signature Therapy", image: "/images/packages/package-b.png", desc: "Rhythmic full-body massage using warm medicated oils." },
-  { ...therapies[5], type: "Stress & Mind", image: "/images/packages/package-c.png", desc: "Continuous pouring of warm herbal oil over the forehead." },
-  { ...therapies[6], type: "Beauty & Skin", image: "/images/packages/package-d.png", desc: "Rejuvenating facial using Navara rice and herbal milk decoctions." },
-  { ...therapies[1], type: "Weight Management", image: "/images/packages/package-e.png", desc: "Invigorating dry herbal powder massage to reduce subcutaneous fat." }
+  { ...panchakarma[0], type: "Panchakarma Detox", image: "/images/packages/package-a.webp", desc: "Therapeutic emesis for respiratory and upper gastrointestinal reset." },
+  { ...therapies[0], type: "Signature Therapy", image: "/images/packages/package-b.webp", desc: "Rhythmic full-body massage using warm medicated oils." },
+  { ...therapies[5], type: "Stress & Mind", image: "/images/packages/package-c.webp", desc: "Continuous pouring of warm herbal oil over the forehead." },
+  { ...therapies[6], type: "Beauty & Skin", image: "/images/packages/package-d.webp", desc: "Rejuvenating facial using Navara rice and herbal milk decoctions." },
+  { ...therapies[1], type: "Weight Management", image: "/images/packages/package-e.webp", desc: "Invigorating dry herbal powder massage to reduce subcutaneous fat." }
 ];
 
 export default function TreatmentsPreview() {

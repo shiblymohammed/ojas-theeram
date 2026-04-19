@@ -122,7 +122,7 @@ export default function CTASection() {
            className="absolute -inset-[10%] w-[120%] h-[120%]"
         >
           <Image 
-            src="/images/BACKGROUND/CTA-bg.png"
+            src="/images/BACKGROUND/CTA-bg.webp"
             alt="Ayurvedic Journey"
             fill
             className="object-cover object-center"

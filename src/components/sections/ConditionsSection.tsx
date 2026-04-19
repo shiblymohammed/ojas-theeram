@@ -7,11 +7,11 @@ import { motion, useScroll, useTransform, useSpring, MotionValue, useMotionValue
 import { conditions } from "@/data/treatments";
 
 const STEPS = [
-  { id: 1, img: "/images/howItWorks/step1.png", title: "Consultation", desc: "Discover your dosha and unique imbalances." },
-  { id: 2, img: "/images/howItWorks/step2.png", title: "Diagnosis", desc: "A personalized ancient assessment." },
-  { id: 3, img: "/images/howItWorks/step3.png", title: "Treatment", desc: "Traditional therapies to restore harmony." },
-  { id: 4, img: "/images/howItWorks/step4.png", title: "Recovery", desc: "Rest and rejuvenate in natural serenity." },
-  { id: 5, img: "/images/howItWorks/step5.png", title: "Balance", desc: "Achieve lasting vitality and peace." },
+  { id: 1, img: "/images/howItWorks/step1.webp", title: "Consultation", desc: "Discover your dosha and unique imbalances." },
+  { id: 2, img: "/images/howItWorks/step2.webp", title: "Diagnosis", desc: "A personalized ancient assessment." },
+  { id: 3, img: "/images/howItWorks/step3.webp", title: "Treatment", desc: "Traditional therapies to restore harmony." },
+  { id: 4, img: "/images/howItWorks/step4.webp", title: "Recovery", desc: "Rest and rejuvenate in natural serenity." },
+  { id: 5, img: "/images/howItWorks/step5.webp", title: "Balance", desc: "Achieve lasting vitality and peace." },
 ];
 
 export default function ConditionsSection() {
@@ -133,7 +133,7 @@ export default function ConditionsSection() {
           {isMobile ? (
             <div className="absolute inset-0 w-full h-full bg-[#050806]">
               <img 
-                src="/images/BACKGROUND/bgWOMAN.png" 
+                src="/images/BACKGROUND/bgWOMAN.webp" 
                 alt="Background" 
                 className="w-full h-full object-cover transform-gpu opacity-90"
                 loading="lazy"
@@ -143,7 +143,7 @@ export default function ConditionsSection() {
             </div>
           ) : isWaterWaveEnabled ? (
             <WaterWave
-              imageUrl="/images/BACKGROUND/bgWOMAN.png"
+              imageUrl="/images/BACKGROUND/bgWOMAN.webp"
               dropRadius={10}
               perturbance={0.01}
               resolution={256}
@@ -159,7 +159,7 @@ export default function ConditionsSection() {
           ) : (
             <div className="absolute inset-0 w-full h-full bg-[#050806]">
               <img 
-                src="/images/BACKGROUND/bgWOMAN.png" 
+                src="/images/BACKGROUND/bgWOMAN.webp" 
                 alt="Background" 
                 className="w-full h-full object-cover transform-gpu opacity-90"
               />
@@ -185,7 +185,7 @@ export default function ConditionsSection() {
           }}
         >
           <img
-            src="/images/BACKGROUND/WOMAN_ONLY.png"
+            src="/images/BACKGROUND/WOMAN_ONLY.webp"
             alt="Subject"
             className="h-[80vh] md:h-[110vh] w-auto max-w-none object-contain object-bottom md:object-center drop-shadow-[0_20px_50px_rgba(0,0,0,0.5)] transform-gpu mt-[15vh] md:mt-0 ml-[18vw] md:ml-[12vw]"
           />

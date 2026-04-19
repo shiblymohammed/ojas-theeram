@@ -6,11 +6,11 @@ import { motion, useMotionValue, useSpring } from "framer-motion";
 import { packages } from "@/data/packages";
 
 const packageImages = [
-  "/images/packages/package-a.png",
-  "/images/packages/package-b.png",
-  "/images/packages/package-c.png",
-  "/images/packages/package-d.png",
-  "/images/packages/package-e.png",
+  "/images/packages/package-a.webp",
+  "/images/packages/package-b.webp",
+  "/images/packages/package-c.webp",
+  "/images/packages/package-d.webp",
+  "/images/packages/package-e.webp",
 ];
 
 const getLayoutClasses = (index: number) => {

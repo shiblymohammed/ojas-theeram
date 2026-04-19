@@ -93,7 +93,7 @@ export default function AboutPage() {
             <motion.div {...fadeUp} className="relative">
               <div className="aspect-[4/5] rounded-2xl overflow-hidden bg-[var(--brand-forest)]/5">
                 <Image
-                  src="/images/other/intro-main.png"
+                  src="/images/other/intro-main.webp"
                   alt="Ayurvedic therapy session"
                   fill
                   className="object-cover"

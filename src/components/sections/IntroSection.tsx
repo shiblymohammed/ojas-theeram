@@ -201,7 +201,7 @@ export default function IntroSection() {
               style={{ scale: imageScale, y: imageY }}
             >
               <Image 
-                src="/images/intro/bg.png" 
+                src="/images/intro/bg.webp" 
                 alt="Intro Background" 
                 fill 
                 sizes="100vw"
@@ -217,7 +217,7 @@ export default function IntroSection() {
               style={{ scale: imageScale, y: imageY }}
             >
               <Image 
-                src="/images/intro/bg-mobile.png" 
+                src="/images/intro/bg-mobile.webp" 
                 alt="Intro Background Mobile" 
                 fill 
                 sizes="100vw"
