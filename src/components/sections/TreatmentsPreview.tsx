@@ -2,6 +2,7 @@
 
 import { useState, useRef } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import { therapies, panchakarma } from "@/data/treatments";
 
@@ -141,9 +142,9 @@ export default function TreatmentsPreview() {
                       <p className="text-xs sm:text-sm font-sans font-light text-[var(--text-secondary)] leading-relaxed max-w-md">
                         {treatment.desc}
                       </p>
-                      <button className="mt-3 sm:mt-4 text-[9px] sm:text-[10px] font-space tracking-[0.2em] uppercase text-[var(--brand-forest)] border-b border-[var(--brand-forest)] pb-1 hover:text-[var(--brand-sand)] hover:border-[var(--brand-sand)] transition-colors">
+                      <Link href="/treatments" className="inline-block mt-3 sm:mt-4 text-[9px] sm:text-[10px] font-space tracking-[0.2em] uppercase text-[var(--brand-forest)] border-b border-[var(--brand-forest)] pb-1 hover:text-[var(--brand-sand)] hover:border-[var(--brand-sand)] transition-colors">
                         Discover More
-                      </button>
+                      </Link>
                     </div>
                   </div>
                 );

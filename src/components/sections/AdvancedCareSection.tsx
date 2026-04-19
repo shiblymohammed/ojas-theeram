@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { motion, useScroll, useTransform, useSpring, MotionValue } from "framer-motion";
 
 const advancedTreatments = [
@@ -135,12 +136,12 @@ function StackedCard({ item, index, scrollYProgress, total }: { item: any, index
         <p className="text-white/40 text-[11px] md:text-sm font-light leading-relaxed mb-6 md:mb-10 max-w-sm">
           {item.detail}
         </p>
-        <button className="group flex items-center gap-4 text-[9px] md:text-[10px] font-space tracking-[0.2em] uppercase text-white transition-colors hover:text-[var(--brand-sand)]">
+        <Link href="/treatments" className="inline-flex items-center gap-4 text-[9px] md:text-[10px] font-space tracking-[0.2em] uppercase text-white transition-colors hover:text-[var(--brand-sand)] group">
           <span className="border-b border-white/30 group-hover:border-[var(--brand-sand)] pb-1 transition-colors">Explore Regimen</span>
           <svg className="w-4 h-4 translate-x-0 group-hover:translate-x-2 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M17 8l4 4m0 0l-4 4m4-4H3" />
           </svg>
-        </button>
+        </Link>
       </div>
     </motion.div>
   );

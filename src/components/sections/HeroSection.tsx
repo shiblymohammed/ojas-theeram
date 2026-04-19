@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useRef } from "react";
+import Link from "next/link";
 
 export default function HeroSection() {
   const ref = useRef(null);
@@ -78,18 +79,18 @@ export default function HeroSection() {
             className="flex flex-col lg:items-end gap-10"
           >
             <div className="flex flex-col sm:flex-row lg:flex-col xl:flex-row gap-4">
-              <button className="group relative px-8 py-4 lg:px-10 lg:py-5 bg-[var(--brand-sand)] text-[var(--bg-primary)] rounded-full font-space tracking-widest uppercase text-[10px] md:text-xs font-bold transition-all duration-500 overflow-hidden shadow-xl hover:shadow-[0_0_30px_rgba(212,200,175,0.4)]">
+              <Link href="/treatments" className="group relative px-8 py-4 lg:px-10 lg:py-5 bg-[var(--brand-sand)] text-[var(--bg-primary)] rounded-full font-space tracking-widest uppercase text-[10px] md:text-xs font-bold transition-all duration-500 overflow-hidden shadow-xl hover:shadow-[0_0_30px_rgba(212,200,175,0.4)]">
                 <span className="relative z-10 w-full text-center">Begin Journey</span>
                 <div className="absolute inset-0 bg-white translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out"></div>
-              </button>
+              </Link>
               
-              <button className="px-8 py-4 lg:px-10 lg:py-5 bg-black/20 backdrop-blur-md text-white border border-white/30 hover:bg-black/40 hover:border-white/60 rounded-full font-space tracking-widest uppercase text-[10px] md:text-xs font-bold transition-all duration-500 flex items-center justify-center gap-3 shadow-lg">
+              <Link href="/booking" className="px-8 py-4 lg:px-10 lg:py-5 bg-black/20 backdrop-blur-md text-white border border-white/30 hover:bg-black/40 hover:border-white/60 rounded-full font-space tracking-widest uppercase text-[10px] md:text-xs font-bold transition-all duration-500 flex items-center justify-center gap-3 shadow-lg">
                 <span className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--color-success)] opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--color-success)]"></span>
                 </span>
                 Consult Vaidya
-              </button>
+              </Link>
             </div>
 
           </motion.div>

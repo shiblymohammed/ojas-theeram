@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { leadPhysician } from "@/data/doctors";
 import { Award, GraduationCap } from "lucide-react";
@@ -128,12 +129,11 @@ export default function DoctorSection() {
                 </div>
               )}
 
-              {/* CTA */}
               <div>
-                <button className="group flex items-center gap-3 sm:gap-4 text-[10px] sm:text-xs font-space tracking-[0.2em] uppercase text-[var(--brand-forest)] hover:text-[var(--brand-sand)] transition-colors">
+                <Link href="/booking" className="inline-flex items-center gap-3 sm:gap-4 text-[10px] sm:text-xs font-space tracking-[0.2em] uppercase text-[var(--brand-forest)] hover:text-[var(--brand-sand)] transition-colors group">
                   <span>Book Consultation</span>
                   <span className="w-6 sm:w-8 h-[1px] bg-[var(--brand-forest)] group-hover:bg-[var(--brand-sand)] transition-colors"></span>
-                </button>
+                </Link>
               </div>
             </div>
           </div>

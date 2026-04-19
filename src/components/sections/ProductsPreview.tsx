@@ -122,7 +122,7 @@ export default function ProductsPreview() {
           alt={product.name}
           fill
           className="object-cover object-bottom scale-[1.2] transform-gpu translate-y-[2%] md:hidden"
-          sizes="100vw"
+          sizes="(max-width: 768px) 100vw, 50vw"
           quality={100}
           priority
         />
