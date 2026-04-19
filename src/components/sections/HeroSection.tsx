@@ -24,6 +24,7 @@ export default function HeroSection() {
       <div className="absolute inset-0 w-full h-full transform-gpu origin-top">
         <video
           src="/videos/hero.mp4"
+          preload="auto"
           autoPlay
           loop
           muted
