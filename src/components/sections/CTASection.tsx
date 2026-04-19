@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { clinic } from "@/data/clinic";
@@ -13,15 +13,26 @@ export default function CTASection() {
     offset: ["start end", "end start"]
   });
 
-  const y = useTransform(scrollYProgress, [0, 1], ["-5%", "5%"]);
+  const y = useTransform(scrollYProgress, [0, 1], ["-10%", "10%"]);
+
+  const [formData, setFormData] = useState({ name: "", phone: "" });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formData.name || !formData.phone) return;
+    
+    const message = `Hello Ojas Theeram! Please call me back for a free consultation.\n\n*Name:* ${formData.name}\n*Phone:* ${formData.phone}`;
+    const url = `https://wa.me/${clinic.whatsapp}?text=${encodeURIComponent(message)}`;
+    window.open(url, "_blank");
+  };
 
   return (
     <section 
       ref={containerRef} 
-      className="relative min-h-screen flex flex-col lg:flex-row w-full overflow-hidden"
+      className="relative min-h-0 lg:min-h-screen flex flex-col lg:flex-row w-full overflow-hidden"
     >
       {/* ── Left Column: Form & Content (Solid Dark) ── */}
-      <div className="w-full lg:w-1/2 bg-[#060a08] relative z-10 flex flex-col justify-center px-8 sm:px-16 md:px-24 py-24 shadow-2xl">
+      <div className="w-full lg:w-1/2 bg-[#060a08] relative z-10 flex flex-col justify-center px-8 sm:px-16 md:px-24 py-20 lg:py-24 shadow-2xl">
         <motion.div
            initial={{ opacity: 0, x: -30 }}
            whileInView={{ opacity: 1, x: 0 }}
@@ -44,10 +55,14 @@ export default function CTASection() {
             Leave your details for a free consultation. Our experienced Vaidyas will evaluate your prakriti and guide you toward lasting wellness.
           </p>
 
-          <form className="flex flex-col gap-8 w-full" onSubmit={(e) => e.preventDefault()}>
+          <form className="flex flex-col gap-8 w-full" onSubmit={handleSubmit}>
             <div className="relative group">
               <input
                 type="text"
+                name="name"
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                required
                 placeholder=" "
                 className="block w-full px-0 pt-4 pb-3 bg-transparent border-0 border-b border-white/20 text-white font-space text-lg outline-none focus:ring-0 focus:border-[var(--brand-sand)] transition-colors peer"
               />
@@ -59,6 +74,10 @@ export default function CTASection() {
             <div className="relative group">
               <input
                 type="tel"
+                name="phone"
+                value={formData.phone}
+                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                required
                 placeholder=" "
                 className="block w-full px-0 pt-4 pb-3 bg-transparent border-0 border-b border-white/20 text-white font-space text-lg outline-none focus:ring-0 focus:border-[var(--brand-sand)] transition-colors peer"
               />
@@ -96,20 +115,21 @@ export default function CTASection() {
         </motion.div>
       </div>
 
-      {/* ── Right Column: Imagery ── */}
+      {/* ── Right Column: Imagery (Parallax Full Height) ── */}
       <div className="w-full lg:w-1/2 min-h-[50vh] lg:min-h-screen relative overflow-hidden hidden md:block">
-        <motion.div
-          style={{ y }}
-          className="absolute -inset-[5%] w-[110%] h-[110%] transform-gpu will-change-transform"
+        <motion.div 
+           style={{ y }}
+           className="absolute -inset-[10%] w-[120%] h-[120%]"
         >
-          <Image
+          <Image 
             src="/images/BACKGROUND/CTA-bg.png"
             alt="Ayurvedic Journey"
             fill
-            className="object-cover object-center transform-gpu"
+            className="object-cover object-center"
             sizes="(max-width: 1024px) 100vw, 50vw"
-            quality={75}
+            quality={90}
           />
+          {/* Subtle gradient to blend the edge on desktop */}
           <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-[#060a08] to-transparent hidden lg:block" />
         </motion.div>
       </div>

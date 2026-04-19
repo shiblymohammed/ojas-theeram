@@ -10,8 +10,8 @@ export default function Footer() {
 
   return (
     <footer className="bg-[var(--brand-forest)] text-[var(--bg-tertiary)] pt-24 pb-8 overflow-hidden relative">
-      {/* Decorative large watermark text */}
-      <div className="absolute bottom-0 left-0 right-0 overflow-hidden pointer-events-none opacity-[0.03] select-none flex justify-center translate-y-1/4">
+      {/* Decorative large watermark text (Desktop Only) */}
+      <div className="absolute bottom-0 left-0 right-0 overflow-hidden pointer-events-none opacity-[0.03] select-none hidden md:flex justify-center translate-y-1/4">
         <span className="font-cormorant text-[15vw] leading-none whitespace-nowrap">Ojas Theeram</span>
       </div>
 
@@ -19,11 +19,11 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-16 mb-20">
           
           {/* Brand Column */}
-          <div className="space-y-6">
-            <Link href="/" className="block w-fit">
-              <span className="font-gallient text-4xl text-white">Ojas Theeram</span>
+          <div className="space-y-6 flex flex-col items-center md:items-start text-center md:text-left w-full">
+            <Link href="/" className="block">
+              <span className="font-gallient text-5xl md:text-4xl text-white">Ojas Theeram</span>
             </Link>
-            <p className="text-[var(--bg-tertiary)]/80 text-sm leading-relaxed max-w-xs font-light">
+            <p className="text-[var(--bg-tertiary)]/80 text-sm leading-relaxed max-w-xs font-light hidden md:block">
               A sanctuary of holistic healing deeply rooted in the ancient traditions of Ayurvedic wisdom.
             </p>
             <div className="flex items-center gap-4 pt-4">
@@ -40,7 +40,7 @@ export default function Footer() {
           </div>
 
           {/* Quick Links Column */}
-          <div>
+          <div className="hidden md:block">
             <h4 className="text-xl font-cormorant text-white mb-6">Quick Links</h4>
             <ul className="space-y-4">
               {[
@@ -61,7 +61,7 @@ export default function Footer() {
           </div>
 
           {/* Contact Column */}
-          <div>
+          <div className="hidden md:block">
             <h4 className="text-xl font-cormorant text-white mb-6">Get in Touch</h4>
             <ul className="space-y-5">
               <li className="flex items-start gap-4">
@@ -82,7 +82,7 @@ export default function Footer() {
           </div>
 
           {/* Newsletter Column */}
-          <div>
+          <div className="hidden lg:block">
             <h4 className="text-xl font-cormorant text-white mb-6">Newsletter</h4>
             <p className="text-[var(--bg-tertiary)]/80 text-sm mb-6 leading-relaxed font-light">
               Subscribe to receive insights on Ayurvedic living, wellness tips, and exclusive offers.
@@ -106,11 +106,11 @@ export default function Footer() {
         </div>
 
         {/* Copyright */}
-        <div className="pt-8 border-t border-white/10 flex flex-col items-center justify-between gap-4 md:flex-row">
-          <p className="text-[var(--bg-tertiary)]/60 text-xs font-light tracking-wide">
+        <div className="pt-8 border-t border-white/10 flex flex-col-reverse md:flex-row items-center justify-between gap-6">
+          <p className="text-[var(--bg-tertiary)]/60 text-xs font-light tracking-wide text-center">
             &copy; {currentYear} Ojas Theeram. All Rights Reserved.
           </p>
-          <div className="flex items-center gap-6 text-[var(--bg-tertiary)]/60 text-xs font-light tracking-wide">
+          <div className="flex items-center gap-6 text-[var(--bg-tertiary)]/60 text-[10px] md:text-xs font-light tracking-widest uppercase md:normal-case">
             <Link href="#" className="hover:text-white transition-colors">Privacy Policy</Link>
             <Link href="#" className="hover:text-white transition-colors">Terms of Service</Link>
           </div>

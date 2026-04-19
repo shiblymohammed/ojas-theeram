@@ -1,109 +1,168 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { leadPhysician } from "@/data/doctors";
+import { Award, GraduationCap } from "lucide-react";
 
 export default function DoctorSection() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 768);
-    check();
-    window.addEventListener("resize", check);
-    return () => window.removeEventListener("resize", check);
-  }, []);
-
+  const [showCertificates, setShowCertificates] = useState(false);
+  
   const { scrollYProgress: entryProgress } = useScroll({
     target: containerRef,
-    offset: ["start end", "start start"],
+    offset: ["start end", "start start"]
   });
 
-  // Desktop: Left text panel drops from top (-200vh → 0)
+  // OPPOSITE SPLIT MATH LOGIC:
+  // For Doctor: Right comes from bottom natively (Image), Left drops from top (-200vh) (Text Profile).
   const leftY = useTransform(entryProgress, [0, 1], ["-200vh", "0vh"]);
-
-  // Mobile mirror: top(image) from top, bottom(text) from bottom
-  const mobileTopY = useTransform(entryProgress, [0, 1], ["-100vh", "0vh"]);
-  const mobileBotY = useTransform(entryProgress, [0, 1], ["200vh", "0vh"]);
-
-  const curtainOpacity = useTransform(entryProgress, [0, 0.5, 1], [0, 0.6, 1]);
+  
+  // Subtle shadow transition as they lock together
+  const curtainShadow = useTransform(entryProgress, [0, 1], [0, 1]);
 
   return (
-    <section
+    <section 
       ref={containerRef}
-      id="doctor"
+      id="doctor" 
+      // Negative top margin physically overlaps the last 100vh of the TreatmentsSection beneath us!
       className="relative h-[250vh] mt-[-100vh] z-20 bg-transparent text-[var(--text-primary)]"
     >
-      <div className="sticky top-0 h-screen w-full flex flex-col md:flex-row overflow-hidden">
-
-        {/* LEFT: Text Panel — drops from top on desktop, from bottom on mobile */}
-        <motion.div
-          style={
-            isMobile
-              ? { y: mobileBotY, opacity: curtainOpacity }
-              : { y: leftY, opacity: curtainOpacity }
-          }
-          className="w-full md:w-1/2 h-[55vh] md:h-full bg-[#f6f2ee] flex items-center px-6 md:px-16 lg:px-24 z-30 shadow-2xl order-2 md:order-1 overflow-y-auto transform-gpu will-change-transform"
+      <div className="sticky top-0 h-screen w-full flex flex-col md:flex-row overflow-visible">
+        
+        {/* Left Side: Enters from TOP using extreme negative parallax (Text Layout) */}
+        <motion.div 
+           style={{ y: leftY, opacity: curtainShadow }}
+           className="w-full md:w-1/2 h-[50vh] md:h-full bg-[#f6f2ee] flex items-center px-4 sm:px-6 md:px-12 lg:px-20 py-6 md:py-0 z-30 shadow-2xl drop-shadow-[45px_0_65px_rgba(0,0,0,0.4)] order-2 md:order-1"
         >
-          <div className="w-full max-w-xl mx-auto flex flex-col justify-center py-6 md:py-0">
-            <div className="mb-8 md:mb-10">
-              <span className="flex items-center gap-4 text-[var(--brand-sand)] font-space tracking-widest text-xs uppercase mb-4">
-                <span className="w-8 h-[1px] bg-[var(--brand-sand)]" />
+          <div className="w-full max-w-xl mx-auto flex flex-col justify-center">
+            <div>
+              <span className="flex items-center gap-3 sm:gap-4 text-[var(--brand-sand)] font-space tracking-widest text-[10px] sm:text-xs uppercase mb-3 sm:mb-4">
+                <span className="w-6 sm:w-8 h-[1px] bg-[var(--brand-sand)]"></span>
                 Lead Physician
               </span>
-              <h2 className="text-3xl md:text-5xl lg:text-7xl font-gallient text-[var(--brand-forest)] leading-[0.9] mb-4 md:mb-6">
-                {leadPhysician.name} <br />
-                <span className="text-xl md:text-[2rem] lg:text-[3rem] text-[#8c7f70]">
-                  {leadPhysician.qualifications}
-                </span>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-gallient text-[var(--brand-forest)] leading-[0.9] mb-3 sm:mb-4">
+                {leadPhysician.name}
               </h2>
-              <p className="text-xs md:text-sm font-sans font-light text-[var(--text-secondary)] leading-relaxed max-w-md">
-                {leadPhysician.biography}
+              <p className="text-lg sm:text-xl md:text-2xl text-[#8c7f70] font-gallient mb-4 sm:mb-6">
+                {leadPhysician.qualifications}
               </p>
+              <p className="text-xs sm:text-sm md:text-base font-sans font-light text-[var(--text-secondary)] leading-relaxed max-w-md mb-6 sm:mb-8">
+                A BAMS graduate with extensive knowledge in Ayurveda, dedicated to delivering excellent patient care through authentic Ayurvedic practices.
+              </p>
+              
+              {/* Specialties */}
+              {leadPhysician.specialties && leadPhysician.specialties.length > 0 && (
+                <div className="mb-6 sm:mb-8">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Award className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[var(--brand-forest)]" />
+                    <p className="font-space text-[9px] sm:text-[10px] tracking-[0.2em] uppercase text-[var(--brand-earth)]">
+                      Specializations
+                    </p>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {leadPhysician.specialties.slice(0, 3).map((specialty, idx) => (
+                      <span
+                        key={idx}
+                        className="text-[9px] sm:text-[10px] font-space tracking-wider uppercase px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full bg-[var(--brand-forest)]/5 text-[var(--brand-forest)] border border-[var(--brand-forest)]/10"
+                      >
+                        {specialty}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
 
-              <div className="mt-8 md:mt-12 flex gap-6 md:gap-12 pb-6 md:pb-8 border-b border-[var(--brand-forest)]/10">
+              {/* Stats */}
+              <div className="flex gap-6 sm:gap-8 md:gap-10 pb-6 sm:pb-8 border-b border-[var(--brand-forest)]/10 mb-6 sm:mb-8">
                 {leadPhysician.stats?.map((stat, index) => (
                   <div key={index}>
-                    <h4 className="text-2xl md:text-4xl font-gallient text-[var(--brand-forest)]">{stat.value}</h4>
-                    <p className="font-space text-[8px] md:text-[9px] tracking-[0.2em] uppercase text-[var(--brand-sand)] mt-1 md:mt-2">{stat.label}</p>
+                    <h4 className="text-2xl sm:text-3xl md:text-4xl font-gallient text-[var(--brand-forest)]">{stat.value}</h4>
+                    <p className="font-space text-[8px] sm:text-[9px] tracking-[0.2em] uppercase text-[var(--brand-sand)] mt-1 sm:mt-2">{stat.label}</p>
                   </div>
                 ))}
               </div>
 
-              <div className="mt-6 md:mt-8">
-                <button className="group flex items-center gap-4 text-[10px] md:text-xs font-space tracking-[0.2em] uppercase text-[var(--brand-forest)] hover:text-[var(--brand-sand)] transition-colors">
-                  <span>Consult {leadPhysician.name}</span>
-                  <span className="w-8 h-[1px] bg-[var(--brand-forest)] group-hover:bg-[var(--brand-sand)] transition-colors" />
+              {/* Certificates Section - Desktop Only */}
+              {leadPhysician.certificates && leadPhysician.certificates.length > 0 && (
+                <div className="hidden md:block mb-6">
+                  <button
+                    onClick={() => setShowCertificates(!showCertificates)}
+                    className="group flex items-center gap-2 text-[10px] sm:text-xs font-space tracking-[0.2em] uppercase text-[var(--brand-forest)] hover:text-[var(--brand-sand)] transition-colors mb-3"
+                  >
+                    <GraduationCap className="w-4 h-4" />
+                    <span>Certifications</span>
+                    <motion.span
+                      animate={{ rotate: showCertificates ? 180 : 0 }}
+                      transition={{ duration: 0.3 }}
+                      className="text-xs"
+                    >
+                      ▼
+                    </motion.span>
+                  </button>
+                  
+                  <AnimatePresence>
+                    {showCertificates && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.3 }}
+                        className="space-y-2 overflow-hidden"
+                      >
+                        {leadPhysician.certificates.slice(0, 3).map((cert, idx) => (
+                          <div
+                            key={idx}
+                            className="flex items-start gap-2 p-2.5 rounded-lg bg-white/50 border border-[var(--brand-forest)]/5"
+                          >
+                            <div className="w-1.5 h-1.5 rounded-full bg-[var(--brand-forest)] mt-1.5 shrink-0" />
+                            <p className="text-[10px] text-[var(--text-secondary)] leading-relaxed">
+                              {cert}
+                            </p>
+                          </div>
+                        ))}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              )}
+
+              {/* CTA */}
+              <div>
+                <button className="group flex items-center gap-3 sm:gap-4 text-[10px] sm:text-xs font-space tracking-[0.2em] uppercase text-[var(--brand-forest)] hover:text-[var(--brand-sand)] transition-colors">
+                  <span>Book Consultation</span>
+                  <span className="w-6 sm:w-8 h-[1px] bg-[var(--brand-forest)] group-hover:bg-[var(--brand-sand)] transition-colors"></span>
                 </button>
               </div>
             </div>
           </div>
         </motion.div>
 
-        {/* RIGHT: Image Panel — naturally from bottom on desktop, from top on mobile */}
-        <motion.div
-          style={isMobile ? { y: mobileTopY, opacity: curtainOpacity } : {}}
-          className="relative w-full md:w-1/2 h-[45vh] md:h-full bg-[var(--brand-forest)] overflow-hidden flex items-center justify-center z-20 shadow-2xl order-1 md:order-2 transform-gpu will-change-transform"
+        {/* Right Side: Enters from BOTTOM inherently (Image Layout) */}
+        <motion.div 
+           className="relative w-full md:w-1/2 h-[50vh] md:h-full bg-[var(--brand-forest)] overflow-hidden flex items-center justify-center pointer-events-auto z-20 shadow-2xl order-1 md:order-2"
         >
+          {/* Subtle text watermark */}
           <div className="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none z-10">
             <h2 className="text-[20vw] md:text-[15vw] font-gallient text-white -rotate-90 md:rotate-0 tracking-widest whitespace-nowrap">
               TRUST
             </h2>
           </div>
 
-          <div className="absolute inset-0 z-0">
-            <Image
-              src={leadPhysician.image}
+          <motion.div className="absolute inset-0 z-0">
+            <Image 
+              src={leadPhysician.image} 
               alt={leadPhysician.name}
               fill
-              className="object-cover object-center grayscale-[15%] opacity-90 transform-gpu"
-              quality={80}
+              className="object-cover object-center grayscale-[15%] opacity-90"
+              quality={85}
+              priority
               sizes="(max-width: 768px) 100vw, 50vw"
             />
+            {/* Elegant vignette overlay */}
             <div className="absolute inset-0 bg-gradient-to-t from-[var(--brand-forest)]/80 via-transparent to-[var(--brand-forest)]/30 pointer-events-none" />
-          </div>
+          </motion.div>
         </motion.div>
 
       </div>

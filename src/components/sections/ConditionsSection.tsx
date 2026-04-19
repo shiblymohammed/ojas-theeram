@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useRef, useEffect, useState, useCallback } from "react";
+import React, { useRef, useEffect, useState, useCallback, useMemo } from "react";
 import dynamic from 'next/dynamic';
-const WaterWave = dynamic(() => import('react-water-wave'), { ssr: false });
+const WaterWave = dynamic(() => import('react-water-wave'), { ssr: false, loading: () => <div className="w-full h-full bg-[#050806]" /> });
 import { motion, useScroll, useTransform, useSpring, MotionValue, useMotionValue } from "framer-motion";
 import { conditions } from "@/data/treatments";
 
@@ -18,10 +18,11 @@ export default function ConditionsSection() {
   const containerRef = useRef<HTMLElement>(null);
   const [isMobile, setIsMobile] = useState(false);
   const [mobileStep, setMobileStep] = useState(0);
+  const [isWaterWaveEnabled, setIsWaterWaveEnabled] = useState(false);
   const touchStartX = useRef(0);
   const touchStartY = useRef(0);
 
-  // Optmized Mouse Parallax without triggering React Re-renders
+  // Optimized Mouse Parallax without triggering React Re-renders
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
   const smoothMouseX = useSpring(mouseX, { stiffness: 60, damping: 20 });
@@ -37,16 +38,25 @@ export default function ConditionsSection() {
   const textY = useTransform(smoothMouseY, [-0.5, 0.5], [-15, 15]);
 
   useEffect(() => {
-    setIsMobile(window.innerWidth < 768);
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    const checkMobile = () => {
+      const mobile = window.innerWidth < 768;
+      setIsMobile(mobile);
+      // Only enable water wave on desktop and when performance is good
+      setIsWaterWaveEnabled(!mobile && window.innerWidth >= 1024);
+    };
+    
+    checkMobile();
+    const handleResize = () => checkMobile();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const handleMouseMove = (e: React.MouseEvent) => {
-    mouseX.set((e.clientX / window.innerWidth) - 0.5);
-    mouseY.set((e.clientY / window.innerHeight) - 0.5);
-  };
+  const handleMouseMove = useCallback((e: React.MouseEvent) => {
+    if (!isMobile) {
+      mouseX.set((e.clientX / window.innerWidth) - 0.5);
+      mouseY.set((e.clientY / window.innerHeight) - 0.5);
+    }
+  }, [isMobile, mouseX, mouseY]);
 
   // Scroll tracking across the HUGE 700vh container
   const { scrollYProgress } = useScroll({
@@ -55,9 +65,14 @@ export default function ConditionsSection() {
   });
 
   // Strict Mobile Scroll Parallax hooks to compensate for the disabled mouse tracking
-  const scrollBgY = useTransform(scrollYProgress, [0, 0.45], [0, 80]);
-  const scrollWomanY = useTransform(scrollYProgress, [0, 0.45], [0, 200]);
-  const scrollTextY = useTransform(scrollYProgress, [0, 0.45], [0, -50]);
+  const rawScrollBgY = useTransform(scrollYProgress, [0, 0.45], [0, 80]);
+  const rawScrollWomanY = useTransform(scrollYProgress, [0, 0.45], [0, 200]);
+  const rawScrollTextY = useTransform(scrollYProgress, [0, 0.45], [0, -50]);
+
+  // WRAPPED IN SPRING FOR ZERO MOBILE SCROLL LAG:
+  const scrollBgY = useSpring(rawScrollBgY, { stiffness: 80, damping: 20, mass: 0.5 });
+  const scrollWomanY = useSpring(rawScrollWomanY, { stiffness: 80, damping: 20, mass: 0.5 });
+  const scrollTextY = useSpring(rawScrollTextY, { stiffness: 80, damping: 20, mass: 0.5 });
 
   // Track the entry so it stays fixed behind Packages
   const { scrollYProgress: entryProgress } = useScroll({
@@ -78,8 +93,10 @@ export default function ConditionsSection() {
   const mobileCTAOpacity = useTransform(scrollYProgress, [0, 0.20, 0.38], [1, 1, 0]);
   const womanGhostOpacity = useTransform(scrollYProgress, [0, 0.25, 0.45, 1], [1, 1, 0.4, 0.4]);
   
-  // Massive cinematic blur transition for the backgrounds!
+  // Massive cinematic blur transition for the backgrounds (DESKTOP ONLY)
   const blurFilter = useTransform(scrollYProgress, [0, 0.25, 0.45, 1], ["blur(0px)", "blur(0px)", "blur(40px)", "blur(40px)"]);
+  // Hardware-accelerated dark wash fade for mobile (REPLACES BLUR GPU COST)
+  const mobileDarkWashOpacity = useTransform(scrollYProgress, [0, 0.25, 0.45, 1], [0.1, 0.1, 0.95, 0.95]);
   const scaleEffect = useTransform(scrollYProgress, [0, 0.25, 0.45, 1], [1, 1, 1.15, 1.15]);
   
   const howItWorksOpacity = useTransform(scrollYProgress, [0, 0.25, 0.45, 1], [0, 0, 1, 1]);
@@ -111,7 +128,7 @@ export default function ConditionsSection() {
         {/* === 1. UNIFIED BACKGROUND === */}
         <motion.div 
           className="absolute inset-0 z-0 origin-center transform-gpu will-change-transform"
-          style={{ x: isMobile ? 0 : bgX, y: isMobile ? scrollBgY : bgY, scale: scaleEffect, filter: blurFilter }}
+          style={{ x: isMobile ? 0 : bgX, y: isMobile ? scrollBgY : bgY, scale: scaleEffect, filter: isMobile ? 'none' : blurFilter }}
         >
           {isMobile ? (
             <div className="absolute inset-0 w-full h-full bg-[#050806]">
@@ -119,11 +136,12 @@ export default function ConditionsSection() {
                 src="/images/BACKGROUND/bgWOMAN.png" 
                 alt="Background" 
                 className="w-full h-full object-cover transform-gpu opacity-90"
+                loading="lazy"
               />
-              <div className="absolute inset-0 w-full h-full pointer-events-none bg-black/40" />
+              <motion.div style={{ opacity: mobileDarkWashOpacity }} className="absolute inset-0 w-full h-full pointer-events-none bg-black transform-gpu will-change-transform" />
               <div className="absolute inset-0 w-full h-full pointer-events-none bg-gradient-to-t from-black/80 via-transparent to-transparent" />
             </div>
-          ) : (
+          ) : isWaterWaveEnabled ? (
             <WaterWave
               imageUrl="/images/BACKGROUND/bgWOMAN.png"
               dropRadius={10}
@@ -138,6 +156,16 @@ export default function ConditionsSection() {
                 </>
               )}
             </WaterWave>
+          ) : (
+            <div className="absolute inset-0 w-full h-full bg-[#050806]">
+              <img 
+                src="/images/BACKGROUND/bgWOMAN.png" 
+                alt="Background" 
+                className="w-full h-full object-cover transform-gpu opacity-90"
+              />
+              <div className="absolute inset-0 w-full h-full pointer-events-none bg-black/40" />
+              <div className="absolute inset-0 w-full h-full pointer-events-none bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+            </div>
           )}
         </motion.div>
 
@@ -148,7 +176,13 @@ export default function ConditionsSection() {
         {/* Main Woman Subject */}
         <motion.div
           className="absolute inset-0 flex items-center justify-center transform-gpu will-change-transform"
-          style={{ x: isMobile ? 0 : womanX, y: isMobile ? scrollWomanY : womanY, scale: 1.05, opacity: womanGhostOpacity, filter: blurFilter }}
+          style={{ 
+            x: isMobile ? 0 : womanX, 
+            y: isMobile ? scrollWomanY : womanY, 
+            scale: 1.05, 
+            opacity: womanGhostOpacity, 
+            filter: isMobile ? 'none' : blurFilter 
+          }}
         >
           <img
             src="/images/BACKGROUND/WOMAN_ONLY.png"
@@ -157,62 +191,38 @@ export default function ConditionsSection() {
           />
         </motion.div>
 
-          {/* ── MOBILE ONLY: Editorial CTA Hero Block (right-side dark space) ── */}
+          {/* ── EDITORIAL CTA HERO BLOCK (Replaces Conditions List universally across devices) ── */}
           <motion.div
-            className="md:hidden absolute top-[22%] right-4 z-30 flex flex-col items-start gap-5 max-w-[200px] pointer-events-auto"
-            style={{ opacity: mobileCTAOpacity, filter: blurFilter }}
+            className="absolute top-[22%] md:top-[30%] right-6 md:right-[12vw] z-30 flex flex-col items-start gap-5 max-w-[220px] md:max-w-lg pointer-events-auto transform-gpu will-change-transform"
+            style={{ 
+              x: isMobile ? 0 : textX, 
+              y: isMobile ? scrollTextY : textY, 
+              opacity: isMobile ? mobileCTAOpacity : textOpacity, 
+              filter: isMobile ? 'none' : blurFilter 
+            }}
           >
-            <div className="flex items-center gap-2">
-              <span className="w-6 h-[1px] bg-[var(--brand-sand)]/70" />
-              <span className="text-[var(--brand-sand)] font-space text-[8px] tracking-[0.35em] uppercase">Ancient Science</span>
+            <div className="flex items-center gap-2 md:gap-4">
+              <span className="w-6 md:w-16 h-[1px] bg-[var(--brand-sand)]/70 md:bg-[var(--brand-sand)]" />
+              <span className="text-[var(--brand-sand)] font-space text-[8px] md:text-[11px] tracking-[0.35em] md:tracking-[0.5em] uppercase">
+                Ancient Science
+              </span>
             </div>
-            <h3 className="text-[#f2ebe1] font-gallient text-5xl leading-[0.9] tracking-wide drop-shadow-xl">
+            <h3 className="text-[#f2ebe1] font-gallient text-5xl md:text-[85px] lg:text-[110px] leading-[0.9] md:leading-[0.85] tracking-wide drop-shadow-xl md:drop-shadow-2xl">
               Heal From <br/><span className="italic text-[var(--brand-sand)]">Within</span>
             </h3>
-            <p className="text-white/55 font-sans text-[11px] leading-relaxed tracking-wide">
-              Personalised Ayurvedic therapies guided by decades of classical wisdom.
+            <p className="text-white/55 md:text-white/70 font-sans text-[11px] md:text-[13px] leading-relaxed tracking-wide md:max-w-sm md:pl-2">
+              Personalised Ayurvedic therapies guided by decades of classical wisdom to restore natural balance.
             </p>
-            <button className="mt-2 w-full py-4 px-8 border-2 border-white/50 text-white text-[10px] font-space tracking-[0.35em] uppercase rounded-full backdrop-blur-md bg-white/8 hover:bg-white/20 hover:border-white active:scale-95 transition-all duration-300 shadow-xl">
-              Consult Now
-            </button>
-          </motion.div>
-
-          {/* ── DESKTOP ONLY: Conditions List (Right Side) ── */}
-          <motion.div 
-            className="hidden md:flex absolute top-[25%] right-[8vw] z-30 flex-col items-end gap-8 max-w-xs transform-gpu will-change-transform"
-            style={{ x: textX, y: textY, opacity: textOpacity, filter: blurFilter }}
-          >
-             <div className="flex items-center gap-4 self-end">
-                <h4 className="text-[var(--brand-sand)] text-xs font-semibold tracking-[0.4em] uppercase">Expertise</h4>
-                <div className="w-8 h-[1px] bg-[var(--brand-sand)]/50" />
-             </div>
-             <div className="flex flex-col items-end gap-6 text-right">
-                {conditions.slice(0, 5).map((cond, idx) => (
-                  <motion.div
-                    key={idx}
-                    initial={{ opacity: 0, x: 20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.1 * idx, duration: 0.8 }}
-                    className="group flex flex-col items-end gap-2"
-                  >
-                    <span className="text-[#f2ebe1] font-gallient text-2xl leading-none tracking-wide group-hover:text-[var(--brand-sand)] transition-colors duration-500">
-                      {cond.title}
-                    </span>
-                    <span className="text-white/30 font-sans text-[10px] uppercase tracking-[0.2em] border-b border-white/5 pb-1 block w-fit">
-                      Ayurvedic Protocol
-                    </span>
-                  </motion.div>
-                ))}
-             </div>
-             <motion.div
-               initial={{ opacity: 0 }}
-               whileInView={{ opacity: 1 }}
-               transition={{ delay: 0.8 }}
-               className="flex flex-col items-end"
-             >
-                <div className="text-[#8c7f70] text-[9px] tracking-[0.2em] uppercase font-bold mb-1">Total Clinical Experience</div>
-                <div className="text-white font-gallient text-4xl">15+ <span className="text-xs tracking-normal">Years</span></div>
-             </motion.div>
+            <div className="w-full md:w-auto md:mt-4 md:pl-2">
+              <a 
+                href="https://wa.me/919353166850?text=Hi%2C%20I%20would%20like%20to%20consult%20regarding%20an%20Ayurvedic%20treatment."
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full md:w-auto text-center inline-block py-4 px-8 md:px-12 border border-white/30 md:border-white/20 text-white text-[10px] md:text-[11px] font-space tracking-[0.35em] md:tracking-[0.4em] uppercase rounded-full backdrop-blur-md bg-white/5 hover:bg-white/10 hover:border-[var(--brand-sand)] hover:text-[var(--brand-sand)] transition-all duration-500 shadow-xl"
+              >
+                Consult Now
+              </a>
+            </div>
           </motion.div>
         </motion.div>
 
