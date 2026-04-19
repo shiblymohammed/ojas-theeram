@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useCallback } from "react";
 import dynamic from 'next/dynamic';
 const WaterWave = dynamic(() => import('react-water-wave'), { ssr: false });
 import { motion, useScroll, useTransform, useSpring, MotionValue, useMotionValue } from "framer-motion";
@@ -17,6 +17,9 @@ const STEPS = [
 export default function ConditionsSection() {
   const containerRef = useRef<HTMLElement>(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [mobileStep, setMobileStep] = useState(0);
+  const touchStartX = useRef(0);
+  const touchStartY = useRef(0);
 
   // Optmized Mouse Parallax without triggering React Re-renders
   const mouseX = useMotionValue(0);
@@ -51,6 +54,11 @@ export default function ConditionsSection() {
     offset: ["start start", "end end"]
   });
 
+  // Strict Mobile Scroll Parallax hooks to compensate for the disabled mouse tracking
+  const scrollBgY = useTransform(scrollYProgress, [0, 0.45], [0, 80]);
+  const scrollWomanY = useTransform(scrollYProgress, [0, 0.45], [0, 200]);
+  const scrollTextY = useTransform(scrollYProgress, [0, 0.45], [0, -50]);
+
   // Track the entry so it stays fixed behind Packages
   const { scrollYProgress: entryProgress } = useScroll({
     target: containerRef,
@@ -65,22 +73,25 @@ export default function ConditionsSection() {
   // 0.45 to 0.55: Stability - User sees "Path to Wellness" header.
   // 0.55 to 0.88: Slider interactive phases.
   // 0.88 to 1.0: Dead-scrolling overlapping space for next section.
-  const womanOpacity = useTransform(scrollYProgress, [0, 0.25, 0.45, 1], [1, 1, 0, 0]);
+  const textOpacity = useTransform(scrollYProgress, [0, 0.25, 0.45, 1], [1, 1, 0, 0]);
+  // Mobile CTA fades out faster — fully gone right as the carousel begins to appear
+  const mobileCTAOpacity = useTransform(scrollYProgress, [0, 0.20, 0.38], [1, 1, 0]);
+  const womanGhostOpacity = useTransform(scrollYProgress, [0, 0.25, 0.45, 1], [1, 1, 0.4, 0.4]);
   
-  // Safely apply blur over the transition to keep bgWOMAN.png softly visible
-  const blurFilter = useTransform(scrollYProgress, [0, 0.25, 0.45, 1], ["blur(0px)", "blur(0px)", "blur(15px)", "blur(15px)"]);
+  // Massive cinematic blur transition for the backgrounds!
+  const blurFilter = useTransform(scrollYProgress, [0, 0.25, 0.45, 1], ["blur(0px)", "blur(0px)", "blur(40px)", "blur(40px)"]);
   const scaleEffect = useTransform(scrollYProgress, [0, 0.25, 0.45, 1], [1, 1, 1.15, 1.15]);
   
   const howItWorksOpacity = useTransform(scrollYProgress, [0, 0.25, 0.45, 1], [0, 0, 1, 1]);
   // Prevent any interaction block when opacity is 0
   const howItWorksPointer = useTransform(howItWorksOpacity, (val) => val > 0.5 ? "auto" : "none");
 
-  // PLATEAU MAPPING: Spreading the 5 slides over the 0.55 to 0.88 scroll bound. 
-  // Notice we END at 0.88 and lock into 4 from 0.88 to 1.0! This creates the pure dead scroll 
+  // PLATEAU MAPPING: Explicitly anchor slide 0 at progress=0.45 (exact moment carousel opacity=1.0)
+  // This prevents spring drift from letting slide 1 transition before the carousel is fully visible.
   const rawActiveFloat = useTransform(
     scrollYProgress,
-    [0.55, 0.58, 0.61, 0.65, 0.68, 0.72, 0.75, 0.79, 0.82, 0.88, 1.0],
-    [   0,    0,    1,    1,    2,    2,    3,    3,    4,    4,   4]
+    [  0, 0.45, 0.58, 0.63, 0.67, 0.71, 0.75, 0.79, 0.82, 1.0],
+    [  0,    0,    0,    1,    1,    2,    2,    3,    4,   4]
   );
   
   // HIGH PERFORMANCE SPRING: Insanely responsive and tight to eliminate perceived "drag lag"
@@ -91,7 +102,7 @@ export default function ConditionsSection() {
       id="conditions"
       ref={containerRef}
       onMouseMove={handleMouseMove}
-      className="relative w-full h-[800vh] bg-[#050806] font-sans z-0"
+      className="relative w-full h-[900vh] bg-[#050806] font-sans z-0"
     >
       <motion.div 
         className="sticky top-0 w-full h-screen overflow-hidden p-0 m-0 will-change-transform"
@@ -99,147 +110,232 @@ export default function ConditionsSection() {
       >
         {/* === 1. UNIFIED BACKGROUND === */}
         <motion.div 
-          className="absolute inset-0 z-0 origin-center"
-          style={{ x: bgX, y: bgY, scale: scaleEffect, filter: blurFilter }}
+          className="absolute inset-0 z-0 origin-center transform-gpu will-change-transform"
+          style={{ x: isMobile ? 0 : bgX, y: isMobile ? scrollBgY : bgY, scale: scaleEffect, filter: blurFilter }}
         >
-          <WaterWave
-            imageUrl="/images/BACKGROUND/bgWOMAN.png"
-            dropRadius={10}
-            perturbance={0.01}
-            resolution={256}
-            className="w-full h-full object-cover"
-          >
-            {() => (
-              <>
-                <div className="absolute inset-0 w-full h-full pointer-events-none bg-black/40" />
-                <div className="absolute inset-0 w-full h-full pointer-events-none bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-              </>
-            )}
-          </WaterWave>
+          {isMobile ? (
+            <div className="absolute inset-0 w-full h-full bg-[#050806]">
+              <img 
+                src="/images/BACKGROUND/bgWOMAN.png" 
+                alt="Background" 
+                className="w-full h-full object-cover transform-gpu opacity-90"
+              />
+              <div className="absolute inset-0 w-full h-full pointer-events-none bg-black/40" />
+              <div className="absolute inset-0 w-full h-full pointer-events-none bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+            </div>
+          ) : (
+            <WaterWave
+              imageUrl="/images/BACKGROUND/bgWOMAN.png"
+              dropRadius={10}
+              perturbance={0.01}
+              resolution={256}
+              className="w-full h-full object-cover"
+            >
+              {() => (
+                <>
+                  <div className="absolute inset-0 w-full h-full pointer-events-none bg-black/40" />
+                  <div className="absolute inset-0 w-full h-full pointer-events-none bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+                </>
+              )}
+            </WaterWave>
+          )}
         </motion.div>
 
-        {/* === 2. CONDITIONS WOMAN & TEXT (FADES OUT) === */}
+        {/* === 2. CONDITIONS WOMAN & TEXT === */}
         <motion.div
           className="absolute inset-0 z-10 pointer-events-none"
-          style={{ opacity: womanOpacity }}
         >
-          {/* Main Woman Subject */}
+        {/* Main Woman Subject */}
+        <motion.div
+          className="absolute inset-0 flex items-center justify-center transform-gpu will-change-transform"
+          style={{ x: isMobile ? 0 : womanX, y: isMobile ? scrollWomanY : womanY, scale: 1.05, opacity: womanGhostOpacity, filter: blurFilter }}
+        >
+          <img
+            src="/images/BACKGROUND/WOMAN_ONLY.png"
+            alt="Subject"
+            className="h-[80vh] md:h-[110vh] w-auto max-w-none object-contain object-bottom md:object-center drop-shadow-[0_20px_50px_rgba(0,0,0,0.5)] transform-gpu mt-[15vh] md:mt-0 ml-[18vw] md:ml-[12vw]"
+          />
+        </motion.div>
+
+          {/* ── MOBILE ONLY: Editorial CTA Hero Block (right-side dark space) ── */}
           <motion.div
-            className="absolute inset-0 flex items-center justify-center"
-            style={{ x: womanX, y: womanY, scale: 1.05 }}
+            className="md:hidden absolute top-[22%] right-4 z-30 flex flex-col items-start gap-5 max-w-[200px] pointer-events-auto"
+            style={{ opacity: mobileCTAOpacity, filter: blurFilter }}
           >
-            <img
-              src="/images/BACKGROUND/WOMAN_ONLY.png"
-              alt="Subject"
-              className="h-[105vh] md:h-[110vh] w-auto max-w-none object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
-            />
+            <div className="flex items-center gap-2">
+              <span className="w-6 h-[1px] bg-[var(--brand-sand)]/70" />
+              <span className="text-[var(--brand-sand)] font-space text-[8px] tracking-[0.35em] uppercase">Ancient Science</span>
+            </div>
+            <h3 className="text-[#f2ebe1] font-gallient text-5xl leading-[0.9] tracking-wide drop-shadow-xl">
+              Heal From <br/><span className="italic text-[var(--brand-sand)]">Within</span>
+            </h3>
+            <p className="text-white/55 font-sans text-[11px] leading-relaxed tracking-wide">
+              Personalised Ayurvedic therapies guided by decades of classical wisdom.
+            </p>
+            <button className="mt-2 w-full py-4 px-8 border-2 border-white/50 text-white text-[10px] font-space tracking-[0.35em] uppercase rounded-full backdrop-blur-md bg-white/8 hover:bg-white/20 hover:border-white active:scale-95 transition-all duration-300 shadow-xl">
+              Consult Now
+            </button>
           </motion.div>
 
-          {/* Arun Signature Text on Right Bottom */}
+          {/* ── DESKTOP ONLY: Conditions List (Right Side) ── */}
           <motion.div 
-            className="absolute bottom-16 md:bottom-24 right-8 md:right-16 z-30"
-            style={{ x: textX, y: textY }}
+            className="hidden md:flex absolute top-[25%] right-[8vw] z-30 flex-col items-end gap-8 max-w-xs transform-gpu will-change-transform"
+            style={{ x: textX, y: textY, opacity: textOpacity, filter: blurFilter }}
           >
-             <div className="flex flex-col items-end text-right">
-                <h2 className="text-[#8c7f70] font-sans text-[10px] md:text-xs tracking-[0.3em] uppercase mb-2 drop-shadow-md">
-                   Authentic Care
-                </h2>
-                <h3 className="text-[#f2ebe1] text-5xl md:text-7xl font-gallient tracking-wider drop-shadow-2xl">
-                  Arun Signature
-                </h3>
+             <div className="flex items-center gap-4 self-end">
+                <h4 className="text-[var(--brand-sand)] text-xs font-semibold tracking-[0.4em] uppercase">Expertise</h4>
+                <div className="w-8 h-[1px] bg-[var(--brand-sand)]/50" />
              </div>
-          </motion.div>
-
-          {/* New Contents: Condition List on Middle Right */}
-          <motion.div 
-            className="absolute top-[20%] md:top-[25%] right-[6vw] md:right-[8vw] z-30 hidden sm:flex flex-col items-end gap-6 md:gap-8 max-w-xs"
-            style={{ x: textX, y: textY }}
-          >
-             <div className="flex items-center gap-4 self-end mb-2">
-                <h4 className="text-[var(--brand-sand)] text-[10px] md:text-xs font-semibold tracking-[0.4em] uppercase">Expertise</h4>
-                <div className="w-8 h-[1px] bg-[var(--brand-sand)]/50"></div>
-             </div>
-
              <div className="flex flex-col items-end gap-6 text-right">
                 {conditions.slice(0, 5).map((cond, idx) => (
-                  <motion.div 
+                  <motion.div
                     key={idx}
                     initial={{ opacity: 0, x: 20 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.1 * idx, duration: 0.8 }}
                     className="group flex flex-col items-end gap-2"
                   >
-                    <span className="text-[#f2ebe1] font-gallient text-xl md:text-2xl leading-none tracking-wide group-hover:text-[var(--brand-sand)] transition-colors duration-500">
+                    <span className="text-[#f2ebe1] font-gallient text-2xl leading-none tracking-wide group-hover:text-[var(--brand-sand)] transition-colors duration-500">
                       {cond.title}
                     </span>
-                    <span className="text-white/30 font-sans text-[9px] md:text-[10px] uppercase tracking-[0.1em] border-b border-white/5 pb-1 block w-fit">
+                    <span className="text-white/30 font-sans text-[10px] uppercase tracking-[0.2em] border-b border-white/5 pb-1 block w-fit">
                       Ayurvedic Protocol
                     </span>
                   </motion.div>
                 ))}
              </div>
-
-             <motion.div 
+             <motion.div
                initial={{ opacity: 0 }}
                whileInView={{ opacity: 1 }}
                transition={{ delay: 0.8 }}
-               className="mt-6 flex flex-col items-end"
+               className="flex flex-col items-end"
              >
                 <div className="text-[#8c7f70] text-[9px] tracking-[0.2em] uppercase font-bold mb-1">Total Clinical Experience</div>
-                <div className="text-white font-gallient text-3xl md:text-4xl pr-1">15+ <span className="text-xs tracking-normal">Years</span></div>
+                <div className="text-white font-gallient text-4xl">15+ <span className="text-xs tracking-normal">Years</span></div>
              </motion.div>
           </motion.div>
         </motion.div>
 
-        {/* === 3. HOW IT WORKS CONTENT (FADES IN) === */}
+        {/* === 3. HOW IT WORKS CONTENT === */}
         <motion.div 
-          className="absolute inset-0 z-20 flex items-center justify-center font-sans will-change-transform"
+          className="absolute inset-0 z-20 font-sans will-change-transform"
           style={{ opacity: howItWorksOpacity, pointerEvents: howItWorksPointer as any }}
         >
-           {/* Darken overlay specifically for text readability of HowItWorks */}
-           <div className="absolute inset-0 bg-black/50 pointer-events-none" />
+           {/* Darken overlay */}
+           <div className="absolute inset-0 bg-black/60 md:bg-black/50 pointer-events-none" />
 
-           {/* FILMSTRIP LAYER (BEHIND EVERYTHING) */}
-           <FilmStripTrack activeFloat={activeFloat} isMobile={isMobile} />
+           {/* FILMSTRIP LAYER — Desktop only, skip on mobile to save GPU */}
+           {!isMobile && <FilmStripTrack activeFloat={activeFloat} isMobile={false} />}
 
-           {/* BRAND-ALIGNED LEFT TYPOGRAPHY */}
-           <div className="absolute top-[15%] md:top-1/2 md:-translate-y-1/2 left-[6vw] md:left-[10vw] z-30 pointer-events-none">
-             <div className="flex items-center gap-4 mb-4 md:mb-6">
-               <span className="w-12 h-[1px] bg-[var(--brand-sand)]"></span>
-               <h2 className="text-[var(--brand-sand)] text-xs md:text-sm font-space tracking-[0.4em] uppercase leading-none drop-shadow-md">
-                 Step by Step
-               </h2>
+           {/* ═══════════════════════════════════════════
+               DESKTOP: Scroll-driven cinematic layout
+           ═══════════════════════════════════════════ */}
+           <div className="hidden md:flex absolute inset-0 items-center justify-center">
+
+             {/* Left Typography */}
+             <div className="absolute top-1/2 -translate-y-1/2 left-[8vw] lg:left-[10vw] z-30 pointer-events-none flex flex-col items-start text-left">
+               <div className="flex items-center gap-4 mb-6">
+                 <span className="w-12 h-[1px] bg-[var(--brand-sand)]"></span>
+                 <h2 className="text-[var(--brand-sand)] text-sm font-space tracking-[0.4em] uppercase leading-none drop-shadow-md">Step by Step</h2>
+               </div>
+               <h3 className="text-white text-7xl lg:text-[90px] font-gallient leading-[0.9] drop-shadow-xl tracking-wide">
+                 Path to <br/> Wellness
+               </h3>
+               <p className="mt-8 font-sans font-light text-white/50 max-w-xs text-sm leading-relaxed tracking-wide drop-shadow-sm">
+                 Experience the transformative phases of classic Ayurvedic therapy, guiding your body and mind back to their natural state of equilibrium.
+               </p>
              </div>
-             <h3 className="text-white text-5xl md:text-7xl lg:text-[90px] font-gallient leading-[0.9] drop-shadow-xl tracking-wide">
-               Path to <br className="hidden md:block"/> Wellness
-             </h3>
-             <p className="mt-5 md:mt-8 font-sans font-light text-white/60 max-w-xs text-xs md:text-sm leading-relaxed tracking-wide drop-shadow-sm">
-               Experience the transformative phases of classic Ayurvedic therapy, guiding your body and mind back to their natural state of equilibrium.
-             </p>
+
+             {/* Scroll-driven Slide Frame */}
+             <div
+               className="relative border-[1.5px] border-dotted border-[#8c7f70]/40 z-20 p-3 bg-[#0d0905]/40 backdrop-blur-sm shadow-[0_20px_50px_rgba(0,0,0,0.8)] ml-[5vw]"
+               style={{ width: "32vw", height: "80vh" }}
+             >
+               <div className="relative w-full h-full bg-[#050505] overflow-hidden shadow-2xl">
+                 {STEPS.map((step, index) => (
+                   <Slide key={step.id} step={step} index={index} activeFloat={activeFloat} />
+                 ))}
+               </div>
+             </div>
            </div>
 
-           {/* CENTER FIXED FRAME */}
-           <div 
-             className="relative border-[1.5px] border-dotted border-[#8c7f70]/40 z-20 transition-all duration-300 p-2 md:p-3 bg-[#0d0905]/40 backdrop-blur-sm shadow-[0_0_50px_rgba(0,0,0,0.8)]"
-             style={{
-               width: isMobile ? "88vw" : "32vw",
-               height: isMobile ? "65vh" : "80vh",
-               marginTop: isMobile ? "10vh" : "0", 
+           {/* ═══════════════════════════════════════════
+               MOBILE: Native touch swipe carousel
+           ═══════════════════════════════════════════ */}
+           <div
+             className="md:hidden absolute inset-0 flex flex-col"
+             onTouchStart={(e) => {
+               touchStartX.current = e.touches[0].clientX;
+               touchStartY.current = e.touches[0].clientY;
+             }}
+             onTouchEnd={(e) => {
+               const dx = touchStartX.current - e.changedTouches[0].clientX;
+               const dy = Math.abs(touchStartY.current - e.changedTouches[0].clientY);
+               // Only register horizontal swipe (not scroll)
+               if (Math.abs(dx) > 40 && dy < 60) {
+                 if (dx > 0) setMobileStep(s => Math.min(s + 1, STEPS.length - 1));
+                 else setMobileStep(s => Math.max(s - 1, 0));
+               }
              }}
            >
-             <div className="relative w-full h-full bg-[#050505] overflow-hidden shadow-2xl">
-               {STEPS.map((step, index) => (
-                 <Slide key={step.id} step={step} index={index} activeFloat={activeFloat} />
+             {/* Step Header */}
+             <div className="relative z-30 flex flex-col items-center text-center pt-[8vh] pb-4 pointer-events-none">
+               <span className="text-[var(--brand-sand)] font-space text-[8px] tracking-[0.4em] uppercase mb-2">Step by Step</span>
+               <h3 className="text-white text-5xl font-gallient leading-tight drop-shadow-xl tracking-wide">
+                 Path to<br/><span className="italic text-[var(--brand-sand)]">Wellness</span>
+               </h3>
+             </div>
+
+             {/* Full-bleed Image Frame */}
+             <div className="relative flex-1 mx-5 mb-4 overflow-hidden rounded-sm border border-[#8c7f70]/30">
+               {STEPS.map((step, idx) => (
+                 <motion.div
+                   key={step.id}
+                   className="absolute inset-0 will-change-transform transform-gpu"
+                   animate={{ x: `${(idx - mobileStep) * 100}%`, opacity: idx === mobileStep ? 1 : 0.3 }}
+                   transition={{ type: "spring", stiffness: 300, damping: 35, mass: 0.8 }}
+                 >
+                   <img
+                     src={step.img}
+                     alt={step.title}
+                     className="absolute inset-0 w-full h-full object-cover object-center transform-gpu"
+                   />
+                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
+                   
+                   {/* Slide info banner */}
+                   <div className="absolute bottom-4 left-4 right-4 z-20">
+                     <span className="text-[#8c7f70] font-space font-bold tracking-[0.2em] text-[8px] uppercase block mb-1">Phase 0{idx + 1}</span>
+                     <h4 className="text-[#f2ebe1] text-2xl font-gallient tracking-wider leading-none mb-2">{step.title}</h4>
+                     <p className="text-white/60 text-[9px] uppercase tracking-[0.15em] leading-relaxed">{step.desc}</p>
+                   </div>
+                 </motion.div>
                ))}
+             </div>
+
+             {/* Dot Indicators + Swipe Hint */}
+             <div className="relative z-30 flex flex-col items-center gap-3 pb-[5vh] pointer-events-none">
+               <div className="flex items-center gap-2">
+                 {STEPS.map((_, idx) => (
+                   <div
+                     key={idx}
+                     className={`rounded-full transition-all duration-400 ${
+                       idx === mobileStep
+                         ? 'w-6 h-1.5 bg-[var(--brand-sand)]'
+                         : 'w-1.5 h-1.5 bg-white/30'
+                     }`}
+                   />
+                 ))}
+               </div>
+               <span className="text-[#8c7f70] text-[7px] tracking-[0.25em] uppercase font-bold">
+                 {mobileStep < STEPS.length - 1 ? 'Swipe to continue' : 'Scroll down'}
+               </span>
              </div>
            </div>
 
-           {/* SCROLL HINT */}
-           <div className="absolute bottom-[4vh] md:bottom-[5vh] left-1/2 -translate-x-1/2 z-30 flex flex-col items-center gap-2 md:gap-3 opacity-80">
-             <div className="w-[1px] h-8 md:h-12 bg-gradient-to-b from-[#8c7f70] to-transparent" />
-             <span className="text-[9px] md:text-[10px] text-[#8c7f70] tracking-[0.2em] uppercase font-bold">
-               Scroll to continue
-             </span>
+           {/* Desktop scroll hint */}
+           <div className="hidden md:flex absolute bottom-[5vh] left-1/2 -translate-x-1/2 z-30 flex-col items-center gap-3 opacity-80">
+             <div className="w-[1px] h-12 bg-gradient-to-b from-[#8c7f70] to-transparent" />
+             <span className="text-[10px] text-[#8c7f70] tracking-[0.2em] uppercase font-bold">Scroll to continue</span>
            </div>
         </motion.div>
 
@@ -294,9 +390,9 @@ function Slide({ step, index, activeFloat }: { step: any, index: number, activeF
   const x = useTransform(activeFloat, (v) => `${(index - v) * 100}%`);
   const diff = useTransform(activeFloat, (v) => index - v);
   
-  // Banner entrance text physics
-  const bannerOpacity = useTransform(diff, [-0.3, 0, 0.3], [0, 1, 0]);
-  const textY = useTransform(diff, [-0.5, 0, 0.5], [20, 0, 20]);
+  // Banner entrance text physics (Widened bounds drastically to prevent fast-scroll blinking)
+  const bannerOpacity = useTransform(diff, [-0.7, 0, 0.7], [0, 1, 0]);
+  const textY = useTransform(diff, [-0.8, 0, 0.8], [30, 0, 30]);
 
   return (
     <motion.div

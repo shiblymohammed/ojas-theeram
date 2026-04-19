@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
-import { motion, AnimatePresence, useScroll, useTransform, useMotionValue, useSpring } from "framer-motion";
+import { motion, useMotionValue, useSpring } from "framer-motion";
 import { packages } from "@/data/packages";
 
 const packageImages = [
@@ -64,23 +64,18 @@ function MagneticButton({ children }: { children: React.ReactNode }) {
 // ── Main Section ──
 export default function PackagesSection({ transparentBg = false }: { transparentBg?: boolean }) {
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Parallax Scroll logic
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start end", "end start"]
-  });
+  // Safely assess viewport limits on mount for layout disabling on restricted devices
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    handleResize(); // Initial check
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
-  // Assign different vertical speeds for staggered parallax effect
-  const y1 = useTransform(scrollYProgress, [0, 1], [0, -100]);
-  const y2 = useTransform(scrollYProgress, [0, 1], [0, -50]);
-  const y3 = useTransform(scrollYProgress, [0, 1], [0, -150]);
-  const y4 = useTransform(scrollYProgress, [0, 1], [0, -80]);
-  const y5 = useTransform(scrollYProgress, [0, 1], [0, -180]);
-  const parallaxY = [y1, y2, y3, y4, y5];
-
-  // Custom Cursor Logic
+  // Custom Cursor Logic purely for the "Explore" hover badge
   const cursorX = useMotionValue(-100);
   const cursorY = useMotionValue(-100);
   const cursorXSpring = useSpring(cursorX, { damping: 25, stiffness: 200 });
@@ -91,37 +86,25 @@ export default function PackagesSection({ transparentBg = false }: { transparent
     if (transparentBg) {
       return hoveredIdx !== null ? '#060a08' : 'rgba(247, 247, 235, 0.85)';
     }
-    return hoveredIdx !== null ? '#060a08' : 'var(--bg-secondary)';
+    return hoveredIdx !== null ? '#060a08' : '#f7f7eb';
   };
 
   return (
     <section
       ref={containerRef}
       id="packages"
-      className={`relative min-h-screen py-32 transition-colors duration-1000 ease-in-out border-b border-black/5 overflow-hidden group/layer z-10 ${transparentBg ? 'backdrop-blur-xl' : ''}`}
+      className={`relative min-h-screen pt-16 md:pt-20 pb-32 transition-colors duration-1000 ease-in-out border-b border-black/5 overflow-hidden group/layer z-20 shadow-[0_-30px_60px_rgba(0,0,0,0.08)] ${transparentBg ? 'backdrop-blur-xl' : ''}`}
       style={{ backgroundColor: getBgColor() }}
       onPointerMove={(e) => {
         cursorX.set(e.clientX - 40); // center the 80px circle
         cursorY.set(e.clientY - 40);
       }}
     >
-      {/* ── Gradient Blurred Background Elements (Non-Hover State, hidden in transparent mode) ── */}
-      {!transparentBg && (
-        <div
-          className={`absolute inset-0 pointer-events-none transition-opacity duration-1000 ease-in-out ${hoveredIdx !== null ? 'opacity-0' : 'opacity-100'}`}
-        >
-          {/* Green/Forest Blob top right */}
-          <div className="absolute top-0 right-0 w-[500px] md:w-[800px] h-[500px] md:h-[800px] bg-[var(--brand-forest)] rounded-full blur-[120px] md:blur-[160px] opacity-[0.12] translate-x-1/4 -translate-y-1/4" />
-
-          {/* Brand Sand Blob bottom left */}
-          <div className="absolute bottom-0 left-0 w-[500px] md:w-[800px] h-[500px] md:h-[800px] bg-[var(--brand-sand)] rounded-full blur-[120px] md:blur-[160px] opacity-[0.15] -translate-x-1/4 translate-y-1/4" />
-        </div>
-      )}
 
       {/* ── Custom View Cursor ── */}
       <motion.div
         style={{ x: cursorXSpring, y: cursorYSpring }}
-        className={`fixed top-0 left-0 w-20 h-20 rounded-full flex items-center justify-center pointer-events-none z-[100] transition-opacity duration-500 mix-blend-exclusion
+        className={`fixed top-0 left-0 w-20 h-20 rounded-full flex items-center justify-center pointer-events-none z-[100] transition-opacity duration-500 mix-blend-exclusion will-change-transform transform-gpu
           ${hoveredIdx !== null ? 'opacity-0 scale-50' : 'opacity-0 group-hover/layer:opacity-100 scale-100'}
         `}
       >
@@ -131,56 +114,74 @@ export default function PackagesSection({ transparentBg = false }: { transparent
         <div className="absolute inset-0 border border-white/50 rounded-full shadow-[0_0_15px_rgba(255,255,255,0.2)] animate-spin-slow" />
       </motion.div>
 
-      {/* ── Floating Watermark ── */}
-      <div className={`absolute inset-0 flex items-center justify-center pointer-events-none z-0 transition-opacity duration-1000 ${hoveredIdx !== null ? 'opacity-0' : 'opacity-[0.03]'}`}>
-        <h2 className={`text-[25vw] leading-none font-gallient whitespace-nowrap transform -rotate-12 mt-20 text-[var(--brand-forest)]`}>
-          AYURVEDA
-        </h2>
-      </div>
 
-      {/* ── Hover Background Image Transition ── */}
-      <AnimatePresence>
-        {hoveredIdx !== null && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.8, ease: "easeInOut" }}
-            className="absolute inset-0 z-0 pointer-events-none"
-          >
-            <Image
-              src={packageImages[hoveredIdx]}
-              alt="Dynamic Background"
-              fill
-              className="object-cover scale-105"
-              quality={100}
-            />
-            {/* Soft overlay without blur for crisp background */}
-            <div className="absolute inset-0 bg-[#060a08]/40" />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#060a08] via-transparent to-transparent" />
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* ── Seamless Top Intersection Mask (Blurs the harsh line between sections) ── */}
+      <div className="absolute top-0 left-0 right-0 h-32 md:h-48 bg-gradient-to-b from-black/5 to-transparent pointer-events-none z-10" />
+
+      {/* ── Hover Background Image Transition (Pre-rendered for Instant Performance) ── */}
+      {/* 
+        By continuously rendering all hover variants into the DOM at opacity-0, 
+        we aggressively force the browser to cache and load the images before the user even hovers. 
+        This eliminates the 500ms flash latency that plagues standard AnimatePresence mounts.
+      */}
+      {packageImages.map((src, idx) => (
+        <div
+          key={src}
+          className={`absolute inset-0 z-0 pointer-events-none transition-opacity duration-[800ms] ease-in-out ${
+            hoveredIdx === idx ? 'opacity-100' : 'opacity-0'
+          }`}
+        >
+          <Image
+            src={src}
+            alt="Dynamic Background"
+            fill
+            sizes="100vw"
+            className="object-cover scale-105 transform-gpu"
+            quality={60} // Lower bit depth for high-speed bg loading
+            loading="lazy"
+          />
+          {/* Aesthetic Shadow Overlays */}
+          <div className="absolute inset-0 bg-[#060a08]/40 md:bg-[#060a08]/50" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#060a08] via-transparent to-transparent" />
+        </div>
+      ))}
 
       <div className="container mx-auto px-6 relative z-10">
 
-        {/* ── Header Reveal ── */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.8 }}
-          className="mb-24 flex flex-col items-center text-center gap-6"
-        >
-          <h2 className={`text-5xl md:text-6xl lg:text-7xl font-gallient transition-colors duration-700 ${
-            hoveredIdx !== null ? 'text-white' : 'text-[var(--brand-forest)]'
-          }`}>
-            Signature Journeys
-          </h2>
-        </motion.div>
+        {/* ── Editorial Header Reveal ── */}
+        <div className="mb-16 md:mb-32 relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.8 }}
+            className={`flex flex-col md:flex-row md:items-end justify-between gap-10 md:gap-16 transition-colors duration-700 ${
+              hoveredIdx !== null ? 'text-white' : 'text-[var(--brand-forest)]'
+            }`}
+          >
+            {/* Col 1: Monumental Typographic Title */}
+            <h2 className="text-6xl md:text-7xl lg:text-[7rem] font-gallient leading-[0.9] tracking-tight">
+              Signature <br />
+              <span className="italic opacity-90 text-[var(--brand-earth)]">Journeys</span>
+            </h2>
 
-        {/* ── Scattered Editorial Grid ── */}
-        <div className="grid grid-cols-12 gap-x-4 md:gap-x-8 gap-y-16 pb-20 relative">
+            {/* Col 2: Contextual Manifesto & Hints */}
+            <div className="flex flex-col gap-6 md:max-w-sm lg:max-w-md pb-2">
+              <p className="font-space text-[10px] md:text-xs tracking-[0.2em] leading-[1.8] uppercase opacity-80">
+                A meticulously curated collection of immersive therapies, combining ancient Ayurvedic science with profound holistic rituals to completely restore structural harmony to your mind, body, and spirit.
+              </p>
+              
+              {/* Intelligent Swipe Hint (Mobile Only) */}
+              <div className="flex md:hidden items-center gap-4 mt-2 opacity-60">
+                <span className={`w-12 h-[1px] transition-colors duration-700 ${hoveredIdx !== null ? 'bg-white' : 'bg-[var(--brand-earth)]'}`} />
+                <span className="font-space text-[9px] tracking-[0.3em] uppercase font-semibold">Swipe to Explore</span>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+
+        {/* ── Scattered Editorial Grid (Desktop) & Swipe Carousel (Mobile) ── */}
+        <div className="flex md:grid md:grid-cols-12 flex-nowrap overflow-x-auto snap-x snap-mandatory md:overflow-visible gap-6 md:gap-x-8 md:gap-y-16 pb-12 md:pb-20 relative w-full -mx-6 px-6 md:mx-0 md:px-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]" style={{ scrollPaddingLeft: "1.5rem" }}>
           {packages.map((pkg, idx) => {
             const isHovered = hoveredIdx === idx;
             const isOtherHovered = hoveredIdx !== null && hoveredIdx !== idx;
@@ -188,18 +189,17 @@ export default function PackagesSection({ transparentBg = false }: { transparent
             return (
               <motion.div
                 key={pkg.id}
-                style={{ y: parallaxY[idx] }} // Parallax attach
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-50px" }} // Reveal trigger
-                transition={{ duration: 0.8, delay: idx * 0.1 }}
-                className={getLayoutClasses(idx)}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.8, delay: isMobile ? 0 : idx * 0.1 }}
+                className={`flex-none w-[68vw] sm:w-[50vw] md:w-auto snap-center transform-gpu ${getLayoutClasses(idx)}`}
                 onMouseEnter={() => setHoveredIdx(idx)}
                 onMouseLeave={() => setHoveredIdx(null)}
               >
                 {/* ── The Card Container ── */}
                 <div
-                  className={`w-full h-full relative transition-all duration-700 ease-out cursor-pointer group
+                  className={`w-full h-full relative transition-[background-color,transform,box-shadow] duration-700 ease-out cursor-pointer group transform-gpu
                     ${isHovered ? 'bg-[#f7f7eb] shadow-2xl scale-[1.02] z-20' : 'bg-transparent'}
                     ${isOtherHovered ? 'border border-white/50 border-solid' : 'border border-transparent'}
                   `}
@@ -217,6 +217,16 @@ export default function PackagesSection({ transparentBg = false }: { transparent
                       className="object-cover transition-transform duration-1000 ease-out group-hover:scale-105"
                       sizes="(max-width: 768px) 100vw, 50vw"
                     />
+                    
+                    {/* Dark gradient mapping purely to enhance the button layout */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent md:hidden" />
+
+                    {/* Mobile Tap Hint Overlay (Disappears seamlessly when clicked/hovered) */}
+                    <div className="absolute inset-x-0 bottom-6 flex justify-center md:hidden z-10 pointer-events-none">
+                      <div className="bg-white/20 backdrop-blur-md border border-white/40 text-white px-5 py-2 rounded-full font-space text-[8px] uppercase tracking-[0.2em] shadow-lg flex items-center gap-2">
+                        <span>Tap to View</span>
+                      </div>
+                    </div>
                   </div>
 
                   {/* Details State (White Box) */}
@@ -252,6 +262,21 @@ export default function PackagesSection({ transparentBg = false }: { transparent
             );
           })}
         </div>
+
+        {/* ── Footer Navigation Action ── */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className={`flex justify-center w-full mt-8 md:mt-16 transition-colors duration-700 ${
+            hoveredIdx !== null ? 'text-white' : 'text-[var(--brand-forest)]'
+          }`}
+        >
+          <MagneticButton>
+            Explore All Curations
+          </MagneticButton>
+        </motion.div>
       </div>
     </section>
   );

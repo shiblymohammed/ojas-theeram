@@ -13,7 +13,7 @@ export default function CTASection() {
     offset: ["start end", "end start"]
   });
 
-  const y = useTransform(scrollYProgress, [0, 1], ["-10%", "10%"]);
+  const y = useTransform(scrollYProgress, [0, 1], ["-5%", "5%"]);
 
   return (
     <section 
@@ -96,21 +96,20 @@ export default function CTASection() {
         </motion.div>
       </div>
 
-      {/* ── Right Column: Imagery (Parallax Full Height) ── */}
+      {/* ── Right Column: Imagery ── */}
       <div className="w-full lg:w-1/2 min-h-[50vh] lg:min-h-screen relative overflow-hidden hidden md:block">
-        <motion.div 
-           style={{ y }}
-           className="absolute -inset-[10%] w-[120%] h-[120%]"
+        <motion.div
+          style={{ y }}
+          className="absolute -inset-[5%] w-[110%] h-[110%] transform-gpu will-change-transform"
         >
-          <Image 
+          <Image
             src="/images/BACKGROUND/CTA-bg.png"
             alt="Ayurvedic Journey"
             fill
-            className="object-cover object-center"
+            className="object-cover object-center transform-gpu"
             sizes="(max-width: 1024px) 100vw, 50vw"
-            quality={90}
+            quality={75}
           />
-          {/* Subtle gradient to blend the edge on desktop */}
           <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-[#060a08] to-transparent hidden lg:block" />
         </motion.div>
       </div>
