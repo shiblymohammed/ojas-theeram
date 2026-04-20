@@ -58,14 +58,14 @@ export default function AdvancedCareSection() {
           
           {/* Left: Typography Block */}
           <div className="w-full md:w-5/12 h-[35vh] md:h-full flex flex-col justify-start pt-[14vh] md:pt-[25vh]">
-            <span className="flex items-center gap-3 md:gap-4 text-[var(--brand-sand)] font-space tracking-widest text-[8px] md:text-xs uppercase mb-3 md:mb-8 drop-shadow-md">
+            <span className="flex items-center gap-3 md:gap-4 text-[var(--brand-sand)] font-space tracking-widest text-[8px] md:text-xs uppercase mb-3 md:mb-8 drop-shadow-md max-md:drop-shadow-none">
               <span className="w-8 md:w-16 h-[1px] bg-[var(--brand-sand)]"></span>
               Specialized Programs
             </span>
-            <h2 className="text-4xl sm:text-5xl md:text-7xl lg:text-[100px] font-gallient text-white leading-[0.95] md:leading-[0.9] drop-shadow-2xl mb-4 md:mb-10">
+            <h2 className="text-4xl sm:text-5xl md:text-7xl lg:text-[100px] font-gallient text-white leading-[0.95] md:leading-[0.9] drop-shadow-2xl max-md:drop-shadow-none mb-4 md:mb-10">
               Advanced <br/> Healing Protocols
             </h2>
-            <p className="text-xs sm:text-sm md:text-base font-sans font-light text-white/50 leading-relaxed max-w-md md:pl-8 md:border-l border-[var(--brand-sand)]/30 drop-shadow-md">
+            <p className="text-xs sm:text-sm md:text-base font-sans font-light text-white/50 leading-relaxed max-w-md md:pl-8 md:border-l border-[var(--brand-sand)]/30 drop-shadow-md max-md:drop-shadow-none">
               For complex, chronic, and severe physiological conditions, our dedicated doctors prescribe intensive 21 to 41-day regimens combining rare herbs, customized dietary isolation, and highly localized therapies.
             </p>
           </div>
@@ -115,16 +115,16 @@ function StackedCard({ item, index, scrollYProgress, total }: { item: any, index
     <motion.div
       style={{ y, scale, opacity, zIndex: index, transformOrigin: 'top center' }}
       // Use will-change to force GPU layering so stacking remains butter smooth on mobile
-      className={`absolute inset-x-0 top-0 h-full bg-gradient-to-br ${item.color} to-[#050505] backdrop-blur-3xl border-t border-l border-white/10 shadow-[0_-20px_50px_rgba(0,0,0,0.8)] p-8 md:p-12 rounded-3xl md:rounded-[40px] flex flex-col justify-between overflow-hidden will-change-transform`}
+      className={`absolute inset-x-0 top-0 h-full bg-gradient-to-br ${item.color} to-[#050505] backdrop-blur-3xl max-md:backdrop-blur-none border-t border-l border-white/10 shadow-[0_-20px_50px_rgba(0,0,0,0.8)] p-8 md:p-12 rounded-3xl md:rounded-[40px] flex flex-col justify-between overflow-hidden will-change-transform`}
     >
       {/* Decorative inner light sweep */}
       <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent pointer-events-none" />
 
       <div>
-        <span className="text-[var(--brand-sand)] font-space text-[9px] md:text-[10px] tracking-[0.3em] uppercase mb-4 md:mb-6 block drop-shadow-md">
+        <span className="text-[var(--brand-sand)] font-space text-[9px] md:text-[10px] tracking-[0.3em] uppercase mb-4 md:mb-6 block drop-shadow-md max-md:drop-shadow-none">
           Phase 0{item.id}
         </span>
-        <h4 className="text-[#f2ebe1] font-gallient text-4xl lg:text-5xl mb-4 leading-tight drop-shadow-xl">
+        <h4 className="text-[#f2ebe1] font-gallient text-4xl lg:text-5xl mb-4 leading-tight drop-shadow-xl max-md:drop-shadow-none">
           {item.name}
         </h4>
         <p className="text-white/80 font-space tracking-[0.1em] md:tracking-[0.2em] text-[9px] md:text-[10px] mb-6 md:mb-10 uppercase opacity-90">

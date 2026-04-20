@@ -187,7 +187,7 @@ export default function ConditionsSection() {
           <img
             src="/images/BACKGROUND/WOMAN_ONLY.webp"
             alt="Subject"
-            className="h-[80vh] md:h-[110vh] w-auto max-w-none object-contain object-bottom md:object-center drop-shadow-[0_20px_50px_rgba(0,0,0,0.5)] transform-gpu mt-[15vh] md:mt-0 ml-[18vw] md:ml-[12vw]"
+            className="h-[80vh] md:h-[110vh] w-auto max-w-none object-contain object-bottom md:object-center drop-shadow-[0_20px_50px_rgba(0,0,0,0.5)] max-[768px]:drop-shadow-none transform-gpu mt-[15vh] md:mt-0 ml-[18vw] md:ml-[12vw]"
           />
         </motion.div>
 
@@ -207,7 +207,7 @@ export default function ConditionsSection() {
                 Ancient Science
               </span>
             </div>
-            <h3 className="text-[#f2ebe1] font-gallient text-5xl md:text-[85px] lg:text-[110px] leading-[0.9] md:leading-[0.85] tracking-wide drop-shadow-xl md:drop-shadow-2xl">
+            <h3 className="text-[#f2ebe1] font-gallient text-5xl md:text-[85px] lg:text-[110px] leading-[0.9] md:leading-[0.85] tracking-wide drop-shadow-xl max-md:drop-shadow-none md:drop-shadow-2xl max-md:drop-shadow-none">
               Heal From <br/><span className="italic text-[var(--brand-sand)]">Within</span>
             </h3>
             <p className="text-white/55 md:text-white/70 font-sans text-[11px] md:text-[13px] leading-relaxed tracking-wide md:max-w-sm md:pl-2">
@@ -218,7 +218,7 @@ export default function ConditionsSection() {
                 href="https://wa.me/919353166850?text=Hi%2C%20I%20would%20like%20to%20consult%20regarding%20an%20Ayurvedic%20treatment."
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full md:w-auto text-center inline-block py-4 px-8 md:px-12 border border-white/30 md:border-white/20 text-white text-[10px] md:text-[11px] font-space tracking-[0.35em] md:tracking-[0.4em] uppercase rounded-full backdrop-blur-md bg-white/5 hover:bg-white/10 hover:border-[var(--brand-sand)] hover:text-[var(--brand-sand)] transition-all duration-500 shadow-xl"
+                className="w-full md:w-auto text-center inline-block py-4 px-8 md:px-12 border border-white/30 md:border-white/20 text-white text-[10px] md:text-[11px] font-space tracking-[0.35em] md:tracking-[0.4em] uppercase rounded-full backdrop-blur-md max-md:backdrop-blur-none bg-white/5 hover:bg-white/10 hover:border-[var(--brand-sand)] hover:text-[var(--brand-sand)] transition-all duration-500 shadow-xl"
               >
                 Consult Now
               </a>
@@ -246,19 +246,19 @@ export default function ConditionsSection() {
              <div className="absolute top-1/2 -translate-y-1/2 left-[8vw] lg:left-[10vw] z-30 pointer-events-none flex flex-col items-start text-left">
                <div className="flex items-center gap-4 mb-6">
                  <span className="w-12 h-[1px] bg-[var(--brand-sand)]"></span>
-                 <h2 className="text-[var(--brand-sand)] text-sm font-space tracking-[0.4em] uppercase leading-none drop-shadow-md">Step by Step</h2>
+                 <h2 className="text-[var(--brand-sand)] text-sm font-space tracking-[0.4em] uppercase leading-none drop-shadow-md max-md:drop-shadow-none">Step by Step</h2>
                </div>
-               <h3 className="text-white text-7xl lg:text-[90px] font-gallient leading-[0.9] drop-shadow-xl tracking-wide">
+               <h3 className="text-white text-7xl lg:text-[90px] font-gallient leading-[0.9] drop-shadow-xl max-md:drop-shadow-none tracking-wide">
                  Path to <br/> Wellness
                </h3>
-               <p className="mt-8 font-sans font-light text-white/50 max-w-xs text-sm leading-relaxed tracking-wide drop-shadow-sm">
+               <p className="mt-8 font-sans font-light text-white/50 max-w-xs text-sm leading-relaxed tracking-wide drop-shadow-sm max-md:drop-shadow-none">
                  Experience the transformative phases of classic Ayurvedic therapy, guiding your body and mind back to their natural state of equilibrium.
                </p>
              </div>
 
              {/* Scroll-driven Slide Frame */}
              <div
-               className="relative border-[1.5px] border-dotted border-[#8c7f70]/40 z-20 p-3 bg-[#0d0905]/40 backdrop-blur-sm shadow-[0_20px_50px_rgba(0,0,0,0.8)] ml-[5vw]"
+               className="relative border-[1.5px] border-dotted border-[#8c7f70]/40 z-20 p-3 bg-[#0d0905]/40 backdrop-blur-sm max-md:backdrop-blur-none shadow-[0_20px_50px_rgba(0,0,0,0.8)] ml-[5vw]"
                style={{ width: "32vw", height: "80vh" }}
              >
                <div className="relative w-full h-full bg-[#050505] overflow-hidden shadow-2xl">
@@ -291,7 +291,7 @@ export default function ConditionsSection() {
              {/* Step Header */}
              <div className="relative z-30 flex flex-col items-center text-center pt-[8vh] pb-4 pointer-events-none">
                <span className="text-[var(--brand-sand)] font-space text-[8px] tracking-[0.4em] uppercase mb-2">Step by Step</span>
-               <h3 className="text-white text-5xl font-gallient leading-tight drop-shadow-xl tracking-wide">
+               <h3 className="text-white text-5xl font-gallient leading-tight drop-shadow-xl max-md:drop-shadow-none tracking-wide">
                  Path to<br/><span className="italic text-[var(--brand-sand)]">Wellness</span>
                </h3>
              </div>
@@ -426,7 +426,7 @@ function Slide({ step, index, activeFloat }: { step: any, index: number, activeF
 
       <motion.div 
         style={{ opacity: bannerOpacity, y: textY }} 
-        className="absolute bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 w-[90%] md:w-[85%] bg-[#0d0905]/80 backdrop-blur-md border border-[#8c7f70]/30 flex flex-row items-center justify-between p-4 md:p-5 z-30 shadow-[0_8px_30px_rgb(0,0,0,0.6)]"
+        className="absolute bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 w-[90%] md:w-[85%] bg-[#0d0905]/80 backdrop-blur-md max-md:backdrop-blur-none border border-[#8c7f70]/30 flex flex-row items-center justify-between p-4 md:p-5 z-30 shadow-[0_8px_30px_rgb(0,0,0,0.6)]"
       >
         <div className="flex flex-col gap-1 md:gap-[6px]">
           <span className="text-[#8c7f70] font-bold tracking-[0.2em] text-[8px] md:text-[9px] uppercase">

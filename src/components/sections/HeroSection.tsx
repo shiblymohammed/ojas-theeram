@@ -52,21 +52,21 @@ export default function HeroSection() {
           >
             <motion.div variants={textRevealVariants} className="flex items-center gap-4 mb-6">
               <span className="w-12 h-[1px] bg-[var(--brand-sand)]"></span>
-              <span className="font-space font-semibold text-[var(--brand-sand)] text-xs md:text-sm tracking-[0.4em] uppercase shadow-black/50 drop-shadow-md">
+              <span className="font-space font-semibold text-[var(--brand-sand)] text-xs md:text-sm tracking-[0.4em] uppercase shadow-black/50 drop-shadow-md max-md:drop-shadow-none">
                 Ayurvedic Sanctuary
               </span>
             </motion.div>
             
             <motion.h1 
               variants={textRevealVariants}
-              className="text-[4rem] sm:text-7xl md:text-[90px] lg:text-[140px] font-gallient text-white leading-[0.9] md:leading-[0.85] tracking-wide drop-shadow-2xl mb-4 md:mb-8"
+              className="text-[4rem] sm:text-7xl md:text-[90px] lg:text-[140px] font-gallient text-white leading-[0.9] md:leading-[0.85] tracking-wide drop-shadow-2xl max-md:drop-shadow-none mb-4 md:mb-8"
             >
               Ojas<br />Theeram
             </motion.h1>
 
             <motion.h2 
                variants={textRevealVariants}
-               className="hidden md:block text-xl md:text-2xl font-cormorant text-white/90 italic tracking-[0.1em] drop-shadow-lg max-w-lg leading-relaxed"
+               className="hidden md:block text-xl md:text-2xl font-cormorant text-white/90 italic tracking-[0.1em] drop-shadow-lg max-md:drop-shadow-none max-w-lg leading-relaxed"
             >
               Experience the purest form of Ayurveda, where ancient wisdom meets modern luxury.
             </motion.h2>
@@ -85,7 +85,7 @@ export default function HeroSection() {
                 <div className="absolute inset-0 bg-white translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out"></div>
               </Link>
               
-              <Link href="/booking" className="hidden sm:flex px-6 py-3.5 lg:px-10 lg:py-5 bg-black/20 backdrop-blur-md text-white border border-white/30 hover:bg-black/40 hover:border-white/60 rounded-full font-space tracking-widest uppercase text-[9px] md:text-xs font-bold transition-all duration-500 items-center justify-center gap-2 lg:gap-3 shadow-lg">
+              <Link href="/booking" className="hidden sm:flex px-6 py-3.5 lg:px-10 lg:py-5 bg-black/20 backdrop-blur-md max-md:backdrop-blur-none text-white border border-white/30 hover:bg-black/40 hover:border-white/60 rounded-full font-space tracking-widest uppercase text-[9px] md:text-xs font-bold transition-all duration-500 items-center justify-center gap-2 lg:gap-3 shadow-lg">
                 <span className="relative flex h-1.5 w-1.5 lg:h-2 lg:w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--color-success)] opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-1.5 w-1.5 lg:h-2 lg:w-2 bg-[var(--color-success)]"></span>

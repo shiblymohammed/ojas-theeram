@@ -78,19 +78,19 @@ export default function ProductsPreview() {
 
         {/* Primary Foreground Info */}
         <div className="relative z-10 flex flex-col items-center">
-          <span className="font-space text-[9px] tracking-[0.4em] uppercase text-[var(--brand-sand)] font-bold mb-3 drop-shadow-md">
+          <span className="font-space text-[9px] tracking-[0.4em] uppercase text-[var(--brand-sand)] font-bold mb-3 drop-shadow-md max-md:drop-shadow-none">
             Signature Product
           </span>
-          <h3 className="text-[75px] font-gallient text-white/90 leading-[0.85] drop-shadow-2xl mb-4">
+          <h3 className="text-[75px] font-gallient text-white/90 leading-[0.85] drop-shadow-2xl max-md:drop-shadow-none mb-4">
             {product.name}
           </h3>
-          <p className="text-white/60 font-sans text-[11px] leading-relaxed max-w-[260px] drop-shadow-md mb-6">
+          <p className="text-white/60 font-sans text-[11px] leading-relaxed max-w-[260px] drop-shadow-md max-md:drop-shadow-none mb-6">
             {product.description}
           </p>
           
           <div className="flex flex-wrap justify-center gap-2 gap-y-3 max-w-[280px]">
             {product.highlights.map((highlight, hIdx) => (
-              <div key={hIdx} className="flex items-center gap-2 border border-white/10 rounded-full px-3 py-1 bg-white/5 backdrop-blur-sm">
+              <div key={hIdx} className="flex items-center gap-2 border border-white/10 rounded-full px-3 py-1 bg-white/5 backdrop-blur-sm max-md:backdrop-blur-none">
                 <div className="w-1 h-1 rounded-full bg-[var(--brand-sand)]" />
                 <span className="font-space text-[7px] tracking-widest uppercase text-white/80">
                   {highlight}
@@ -104,7 +104,7 @@ export default function ProductsPreview() {
       {/* 3. Product Cutout Image (Full Screen Layer) */}
       <motion.div 
         style={{ y: productImageY }}
-        className="absolute inset-0 w-full h-full z-10 pointer-events-none drop-shadow-[0_50px_30px_rgba(0,0,0,0.95)] md:drop-shadow-[0_70px_40px_rgba(0,0,0,0.95)] transform-gpu will-change-transform"
+        className="absolute inset-0 w-full h-full z-10 pointer-events-none drop-shadow-[0_50px_30px_rgba(0,0,0,0.95)] max-[768px]:drop-shadow-none md:drop-shadow-[0_70px_40px_rgba(0,0,0,0.95)] max-[768px]:drop-shadow-none transform-gpu will-change-transform"
       >
         {/* Desktop Product Cutout */}
         <Image 
@@ -144,11 +144,11 @@ export default function ProductsPreview() {
             </span>
           </div>
 
-          <h3 className="text-6xl md:text-7xl lg:text-[90px] font-gallient text-white leading-[0.9] mb-8 drop-shadow-lg">
+          <h3 className="text-6xl md:text-7xl lg:text-[90px] font-gallient text-white leading-[0.9] mb-8 drop-shadow-lg max-md:drop-shadow-none">
             {product.name}
           </h3>
           
-          <p className="text-[#f7f7eb]/80 font-space text-lg md:text-xl leading-relaxed mb-10 max-w-md drop-shadow-md">
+          <p className="text-[#f7f7eb]/80 font-space text-lg md:text-xl leading-relaxed mb-10 max-w-md drop-shadow-md max-md:drop-shadow-none">
             {product.description}
           </p>
 
@@ -186,7 +186,7 @@ export default function ProductsPreview() {
           href={`https://wa.me/919353166850?text=${encodeURIComponent(product.whatsappText)}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="group relative inline-flex items-center justify-center pointer-events-auto px-8 py-5 bg-[var(--brand-sand)]/90 backdrop-blur-md border border-white/20 text-[var(--text-primary)] overflow-hidden shadow-[0_20px_40px_rgba(0,0,0,0.6)] rounded-full w-full max-w-[280px]"
+          className="group relative inline-flex items-center justify-center pointer-events-auto px-8 py-5 bg-[var(--brand-sand)]/90 backdrop-blur-md max-md:backdrop-blur-none border border-white/20 text-[var(--text-primary)] overflow-hidden shadow-[0_20px_40px_rgba(0,0,0,0.6)] rounded-full w-full max-w-[280px]"
         >
           <span className="relative z-10 font-space text-[10px] tracking-[0.25em] uppercase font-bold flex items-center gap-3">
             Order via WhatsApp

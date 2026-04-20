@@ -79,7 +79,7 @@ const TextContent = ({ variant }: { variant: "light" | "dark" }) => {
 
       {/* Bottom Badge Icon (Water drop variation) */}
       <div 
-        className="w-14 h-14 rounded-full border flex items-center justify-center backdrop-blur-sm mt-2"
+        className="w-14 h-14 rounded-full border flex items-center justify-center backdrop-blur-sm max-md:backdrop-blur-none mt-2"
         style={{ borderColor: isDark ? "rgba(44,74,59,0.2)" : "rgba(255,255,255,0.2)" }}
       >
         <div 
@@ -285,7 +285,7 @@ export default function IntroSection() {
 
           {/* ── Top Right Leaf (Flipped & Inverted Physics) ── */}
           <motion.div
-            className={`absolute top-0 right-0 w-[180px] h-[180px] sm:w-[250px] sm:h-[250px] md:w-[400px] md:h-[400px] lg:w-[500px] lg:h-[500px] z-[999] pointer-events-none drop-shadow-2xl mix-blend-multiply transition-opacity duration-1000 blur-[0.3px] contrast-105 brightness-95 ${
+            className={`absolute top-0 right-0 w-[180px] h-[180px] sm:w-[250px] sm:h-[250px] md:w-[400px] md:h-[400px] lg:w-[500px] lg:h-[500px] z-[999] pointer-events-none drop-shadow-2xl max-md:drop-shadow-none mix-blend-multiply transition-opacity duration-1000 blur-[0.3px] contrast-105 brightness-95 ${
               showLeaf ? "opacity-100" : "opacity-0"
             }`}
              style={{
@@ -308,7 +308,7 @@ export default function IntroSection() {
 
           {/* ── Foreground Leaf (Fast + Cinematic Physics) ── */}
           <motion.div
-            className={`absolute bottom-0 left-0 w-[180px] h-[180px] sm:w-[250px] sm:h-[250px] md:w-[400px] md:h-[400px] lg:w-[500px] lg:h-[500px] z-[999] pointer-events-none drop-shadow-2xl mix-blend-multiply transition-opacity duration-1000 blur-[0.3px] contrast-105 brightness-95 ${
+            className={`absolute bottom-0 left-0 w-[180px] h-[180px] sm:w-[250px] sm:h-[250px] md:w-[400px] md:h-[400px] lg:w-[500px] lg:h-[500px] z-[999] pointer-events-none drop-shadow-2xl max-md:drop-shadow-none mix-blend-multiply transition-opacity duration-1000 blur-[0.3px] contrast-105 brightness-95 ${
               showLeaf ? "opacity-100" : "opacity-0"
             }`}
             style={{

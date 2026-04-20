@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
@@ -8,6 +8,27 @@ import { leadPhysician } from "@/data/doctors";
 import { Award, GraduationCap } from "lucide-react";
 
 export default function DoctorSection() {
+  const [isMounted, setIsMounted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  if (!isMounted) return <div className="min-h-screen bg-[#f3eee8]"></div>;
+
+  if (isMobile) {
+    return <MobileDoctorSection />;
+  }
+
+  return <DesktopDoctorSection />;
+}
+
+function DesktopDoctorSection() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [showCertificates, setShowCertificates] = useState(false);
   
@@ -35,7 +56,7 @@ export default function DoctorSection() {
         {/* Left Side: Enters from TOP using extreme negative parallax (Text Layout) */}
         <motion.div 
            style={{ y: leftY, opacity: curtainShadow }}
-           className="w-full md:w-1/2 h-[50vh] md:h-full bg-[#f6f2ee] flex items-center px-4 sm:px-6 md:px-12 lg:px-20 py-6 md:py-0 z-30 shadow-2xl drop-shadow-[45px_0_65px_rgba(0,0,0,0.4)] order-2 md:order-1"
+           className="w-full md:w-1/2 h-[50vh] md:h-full bg-[#f6f2ee] flex items-center px-4 sm:px-6 md:px-12 lg:px-20 py-6 md:py-0 z-30 shadow-2xl drop-shadow-[45px_0_65px_rgba(0,0,0,0.4)] max-[768px]:drop-shadow-none order-2 md:order-1"
         >
           <div className="w-full max-w-xl mx-auto flex flex-col justify-center">
             <div>
@@ -166,6 +187,69 @@ export default function DoctorSection() {
         </motion.div>
 
       </div>
+    </section>
+  );
+}
+
+// =========================================
+// MOBILE DEDICATED DOCTOR PROFILE (100% NATIVE)
+// =========================================
+function MobileDoctorSection() {
+  return (
+    <section className="relative w-full min-h-screen bg-[#f3eee8] overflow-hidden md:hidden pb-12">
+      {/* Top 60% Portrait Image */}
+      <div className="relative w-full h-[60vh]">
+        <Image 
+          src={leadPhysician.image} 
+          alt={leadPhysician.name}
+          fill
+          className="object-cover object-top grayscale-[20%]"
+          sizes="100vw"
+          priority
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#f3eee8] via-transparent to-transparent opacity-90" />
+      </div>
+
+      {/* Slide-up Overlapping Text Card */}
+      <motion.div 
+        initial={{ y: 50, opacity: 0 }}
+        whileInView={{ y: -60, opacity: 1 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        className="relative z-10 mx-4 bg-[#f6f2ee] rounded-3xl p-6 shadow-2xl border border-[var(--brand-sand)]/20"
+      >
+        <span className="flex items-center gap-2 text-[var(--brand-sand)] font-space tracking-widest text-[9px] uppercase mb-3">
+          <span className="w-6 h-[1px] bg-[var(--brand-sand)]"></span>
+          Lead Physician
+        </span>
+        <h2 className="text-4xl font-gallient text-[var(--brand-forest)] leading-none mb-2">
+          {leadPhysician.name}
+        </h2>
+        <p className="text-[#8c7f70] font-gallient text-lg mb-6">
+          {leadPhysician.qualifications}
+        </p>
+
+        {/* Dynamic Specialties Grid */}
+        <div className="grid grid-cols-2 gap-3 mb-8">
+          {leadPhysician.specialties?.slice(0, 4).map((spec, i) => (
+             <div key={i} className="flex items-start gap-2 bg-white/50 rounded-xl p-3 border border-black/5 shadow-sm">
+                <Award className="w-4 h-4 text-[var(--brand-forest)] shrink-0 mt-[2px]" />
+                <span className="text-[10px] sm:text-xs font-sans font-medium text-[var(--text-primary)] relative top-[1px]">
+                   {spec}
+                </span>
+             </div>
+          ))}
+        </div>
+
+        <Link href="/about" className="group flex items-center justify-between w-full bg-[var(--brand-forest)] text-white px-6 py-4 rounded-xl hover:bg-[#1a2e24] transition-colors shadow-lg">
+          <div className="flex flex-col">
+            <span className="font-space uppercase tracking-[0.2em] text-[10px]">Read Biography</span>
+          </div>
+          <svg className="w-5 h-5 text-[var(--brand-sand)] transform group-hover:translate-x-1 duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+          </svg>
+        </Link>
+      </motion.div>
     </section>
   );
 }

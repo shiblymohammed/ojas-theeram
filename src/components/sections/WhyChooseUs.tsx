@@ -79,7 +79,7 @@ const Card = ({
         <motion.div style={{ opacity }} className="flex flex-col md:flex-row gap-8 md:gap-16 w-full relative z-10">
           
           <div className="md:w-1/3 flex flex-col justify-between">
-            <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl md:rounded-[2rem] border border-[inherit] flex items-center justify-center mb-8 bg-black/5 backdrop-blur-sm">
+            <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl md:rounded-[2rem] border border-[inherit] flex items-center justify-center mb-8 bg-black/5 backdrop-blur-sm max-md:backdrop-blur-none">
               {feature.icon}
             </div>
             
@@ -129,7 +129,7 @@ export default function WhyChooseUs() {
             <span className="text-[var(--brand-earth)] tracking-[0.3em] font-space text-xs font-bold uppercase mb-4 block">
               The Ojas Theeram Difference
             </span>
-            <h2 className="text-5xl md:text-7xl lg:text-[90px] text-[var(--brand-forest)] font-gallient leading-none drop-shadow-sm">
+            <h2 className="text-5xl md:text-7xl lg:text-[90px] text-[var(--brand-forest)] font-gallient leading-none drop-shadow-sm max-md:drop-shadow-none">
               Why Choose Us
             </h2>
          </motion.div>

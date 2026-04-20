@@ -93,7 +93,7 @@ export default function PackagesSection({ transparentBg = false }: { transparent
     <section
       ref={containerRef}
       id="packages"
-      className={`relative min-h-screen pt-16 md:pt-20 pb-32 transition-colors duration-1000 ease-in-out border-b border-black/5 overflow-hidden group/layer z-20 shadow-[0_-30px_60px_rgba(0,0,0,0.08)] ${transparentBg ? 'backdrop-blur-xl' : ''}`}
+      className={`relative min-h-screen pt-16 md:pt-20 pb-32 transition-colors duration-1000 ease-in-out border-b border-black/5 overflow-hidden group/layer z-20 shadow-[0_-30px_60px_rgba(0,0,0,0.08)] ${transparentBg ? 'backdrop-blur-xl max-md:backdrop-blur-none' : ''}`}
       style={{ backgroundColor: getBgColor() }}
       onPointerMove={(e) => {
         cursorX.set(e.clientX - 40); // center the 80px circle
@@ -223,7 +223,7 @@ export default function PackagesSection({ transparentBg = false }: { transparent
 
                     {/* Mobile Tap Hint Overlay (Disappears seamlessly when clicked/hovered) */}
                     <div className="absolute inset-x-0 bottom-6 flex justify-center md:hidden z-10 pointer-events-none">
-                      <div className="bg-white/20 backdrop-blur-md border border-white/40 text-white px-5 py-2 rounded-full font-space text-[8px] uppercase tracking-[0.2em] shadow-lg flex items-center gap-2">
+                      <div className="bg-white/20 backdrop-blur-md max-md:backdrop-blur-none border border-white/40 text-white px-5 py-2 rounded-full font-space text-[8px] uppercase tracking-[0.2em] shadow-lg flex items-center gap-2">
                         <span>Tap to View</span>
                       </div>
                     </div>
@@ -253,7 +253,7 @@ export default function PackagesSection({ transparentBg = false }: { transparent
                 {/* Subtitle */}
                 <div className="absolute -bottom-8 md:-bottom-10 left-0 right-0 flex items-start justify-between pointer-events-none z-0">
                   <p className={`font-space tracking-[0.15em] uppercase text-[10px] md:text-xs font-semibold transition-colors duration-700 max-w-[85%] leading-tight
-                    ${hoveredIdx !== null ? 'text-white drop-shadow-md' : 'text-[var(--text-primary)]'}
+                    ${hoveredIdx !== null ? 'text-white drop-shadow-md max-md:drop-shadow-none' : 'text-[var(--text-primary)]'}
                   `}>
                     {pkg.title}
                   </p>
