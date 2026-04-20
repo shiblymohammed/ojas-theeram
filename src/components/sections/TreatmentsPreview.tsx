@@ -39,10 +39,10 @@ export default function TreatmentsPreview() {
       ref={containerRef}
       id="treatments" 
       // Negative top margin physically overlaps the last 100vh of the Conditions section beneath us!
-      className="relative h-[250vh] mt-[-100vh] z-10 bg-transparent text-[var(--text-primary)]"
+      className="relative md:h-[250vh] md:mt-[-100vh] z-10 bg-transparent text-[var(--text-primary)]"
     >
       {/* Sticky Container for Split Layout - No overflow hiding enables the right side to spawn from space out of bounds! */}
-      <div className="sticky top-0 h-[100svh] lg:h-screen w-full flex flex-col md:flex-row overflow-visible">
+      <div className="md:sticky md:top-0 h-auto md:h-screen w-full flex flex-col md:flex-row overflow-visible">
         
         {/* Left Side: Enters from BOTTOM inherently (Image Layout) */}
         <motion.div 
