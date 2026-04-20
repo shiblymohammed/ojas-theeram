@@ -38,15 +38,15 @@ export default function TreatmentsPreview() {
     <section 
       ref={containerRef}
       id="treatments" 
-      // Negative top margin physically overlaps the last 100vh of the Conditions section beneath us, ONLY on Desktop!
-      className="relative h-auto md:h-[250vh] md:mt-[-100vh] z-10 bg-[var(--bg-primary)] md:bg-transparent text-[var(--text-primary)]"
+      // Negative top margin physically overlaps the last 100vh of the Conditions section beneath us!
+      className="relative md:h-[250vh] md:mt-[-100vh] z-10 bg-transparent text-[var(--text-primary)]"
     >
-      {/* Sticky Container Desktop / Standard Container Mobile */}
-      <div className="relative md:sticky md:top-0 h-auto md:h-screen w-full flex flex-col md:flex-row overflow-visible">
+      {/* Sticky Container for Split Layout - No overflow hiding enables the right side to spawn from space out of bounds! */}
+      <div className="md:sticky md:top-0 h-auto md:h-screen w-full flex flex-col md:flex-row overflow-visible">
         
         {/* Left Side: Enters from BOTTOM inherently (Image Layout) */}
         <motion.div 
-           className="relative w-full md:w-1/2 h-[50vh] md:h-full bg-[var(--brand-forest)] overflow-hidden flex items-center justify-center z-20 shadow-none md:shadow-2xl"
+           className="relative w-full md:w-1/2 h-[40vh] md:h-full bg-[var(--brand-forest)] overflow-hidden flex items-center justify-center pointer-events-auto z-20 shadow-2xl"
         >
           {/* Subtle text watermark */}
           <div className="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none z-10">
@@ -100,10 +100,10 @@ export default function TreatmentsPreview() {
           </div>
         </motion.div>
 
-        {/* Right Side: Enters from TOP using extreme negative parallax on Desktop (Interactive List) */}
+        {/* Right Side: Enters from TOP using extreme negative parallax (Interactive List) */}
         <motion.div 
            style={{ y: rightY, opacity: curtainShadow }}
-           className="w-full md:w-1/2 h-auto py-12 md:py-0 md:h-full bg-[#f3eee8] flex items-center px-4 sm:px-8 md:px-16 lg:px-24 z-30 shadow-2xl md:drop-shadow-[0_45px_65px_rgba(0,0,0,0.5)] max-md:!transform-none max-md:!opacity-100"
+           className="w-full md:w-1/2 h-[60vh] md:h-full bg-[#f3eee8] flex items-center px-4 sm:px-8 md:px-16 lg:px-24 z-30 shadow-2xl drop-shadow-[0_45px_65px_rgba(0,0,0,0.5)]"
         >
           <div className="w-full max-w-xl mx-auto flex flex-col justify-center">
             

@@ -27,15 +27,15 @@ export default function DoctorSection() {
     <section 
       ref={containerRef}
       id="doctor" 
-      // Negative top margin physically overlaps the last 100vh of the TreatmentsSection beneath us, only on Desktop!
-      className="relative h-auto md:h-[250vh] md:mt-[-100vh] z-20 bg-[#f6f2ee] md:bg-transparent text-[var(--text-primary)]"
+      // Negative top margin physically overlaps the last 100vh of the TreatmentsSection beneath us!
+      className="relative h-[250vh] mt-[-100vh] z-20 bg-transparent text-[var(--text-primary)]"
     >
-      <div className="relative md:sticky md:top-0 h-auto md:h-screen w-full flex flex-col md:flex-row overflow-visible">
+      <div className="sticky top-0 h-[100svh] lg:h-screen w-full flex flex-col md:flex-row overflow-visible">
         
-        {/* Left Side: Enters from TOP using extreme negative parallax on Desktop (Text Layout) */}
+        {/* Left Side: Enters from TOP using extreme negative parallax (Text Layout) */}
         <motion.div 
            style={{ y: leftY, opacity: curtainShadow }}
-           className="w-full md:w-1/2 h-auto py-12 md:py-0 md:h-full bg-[#f6f2ee] flex items-center px-4 sm:px-6 md:px-12 lg:px-20 z-30 shadow-2xl drop-shadow-none md:drop-shadow-[45px_0_65px_rgba(0,0,0,0.4)] order-2 md:order-1 max-md:!transform-none max-md:!opacity-100"
+           className="w-full md:w-1/2 h-[50vh] md:h-full bg-[#f6f2ee] flex items-center px-4 sm:px-6 md:px-12 lg:px-20 py-6 md:py-0 z-30 shadow-2xl drop-shadow-[45px_0_65px_rgba(0,0,0,0.4)] order-2 md:order-1"
         >
           <div className="w-full max-w-xl mx-auto flex flex-col justify-center">
             <div>
@@ -141,7 +141,7 @@ export default function DoctorSection() {
 
         {/* Right Side: Enters from BOTTOM inherently (Image Layout) */}
         <motion.div 
-           className="relative w-full md:w-1/2 h-[50vh] md:h-full bg-[var(--brand-forest)] overflow-hidden flex items-center justify-center p-8 z-20 order-1 md:order-2 shadow-none md:shadow-2xl"
+           className="relative w-full md:w-1/2 h-[50vh] md:h-full bg-[var(--brand-forest)] overflow-hidden flex items-center justify-center pointer-events-auto z-20 shadow-2xl order-1 md:order-2"
         >
           {/* Subtle text watermark */}
           <div className="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none z-10">

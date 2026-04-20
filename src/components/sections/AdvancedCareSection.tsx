@@ -29,11 +29,11 @@ export default function AdvancedCareSection() {
     <section 
       ref={containerRef}
       id="advanced-care" 
-      // Overlap the Doctor Section & extend scroll space for stacking on desktop only!
-      className="relative h-auto md:h-[400vh] md:mt-[-100vh] z-30 bg-[#050806] text-[var(--text-primary)]"
+      // Overlap the Doctor Section & extend scroll space for stacking!
+      className="relative h-[400vh] mt-[-100vh] z-30 bg-[#050806] text-[var(--text-primary)]"
     >
-      {/* Sticky Full-Screen Takeover Container (Desktop) / Native block (Mobile) */}
-      <div className="relative md:sticky md:top-0 h-auto md:h-screen w-full flex items-center justify-center overflow-hidden bg-[#050806] py-16 md:py-0">
+      {/* Sticky Full-Screen Takeover Container */}
+      <div className="sticky top-0 h-[100svh] lg:h-screen w-full flex items-center justify-center overflow-hidden bg-[#050806]">
         
         {/* Cinematic Modulated Image Wrapper */}
         <div className="absolute inset-0 z-0 bg-[#050806] overflow-hidden">
@@ -71,8 +71,8 @@ export default function AdvancedCareSection() {
           </div>
 
           {/* Right: The Interactive Card Stack */}
-          <div className="w-full md:w-7/12 h-auto md:h-full relative flex items-start md:items-center justify-center md:justify-end mt-12 md:mt-0 xl:pr-12">
-             <div className="w-full max-w-md lg:max-w-xl relative h-auto md:h-[480px] flex flex-col md:block">
+          <div className="w-full md:w-7/12 h-[65vh] md:h-full relative flex items-start md:items-center justify-center md:justify-end mt-4 md:mt-0 xl:pr-12">
+             <div className="w-full max-w-md lg:max-w-xl relative h-[380px] md:h-[480px]">
                {advancedTreatments.map((item, index) => (
                  <StackedCard 
                    key={item.id} 
@@ -114,8 +114,8 @@ function StackedCard({ item, index, scrollYProgress, total }: { item: any, index
   return (
     <motion.div
       style={{ y, scale, opacity, zIndex: index, transformOrigin: 'top center' }}
-      // Responsive fallback: absolute on desktop for complex overlaps, relative stack natively on mobile avoiding GPU strains.
-      className={`relative mb-6 md:mb-0 md:absolute inset-x-0 top-0 h-auto md:h-full min-h-[350px] bg-gradient-to-br ${item.color} to-[#050505] backdrop-blur-3xl border-t border-l border-white/10 shadow-[0_-20px_50px_rgba(0,0,0,0.8)] p-8 md:p-12 rounded-[2rem] md:rounded-[40px] flex flex-col justify-between overflow-hidden will-change-transform max-md:!transform-none max-md:!opacity-100 max-md:!scale-100`}
+      // Use will-change to force GPU layering so stacking remains butter smooth on mobile
+      className={`absolute inset-x-0 top-0 h-full bg-gradient-to-br ${item.color} to-[#050505] backdrop-blur-3xl border-t border-l border-white/10 shadow-[0_-20px_50px_rgba(0,0,0,0.8)] p-8 md:p-12 rounded-3xl md:rounded-[40px] flex flex-col justify-between overflow-hidden will-change-transform`}
     >
       {/* Decorative inner light sweep */}
       <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent pointer-events-none" />

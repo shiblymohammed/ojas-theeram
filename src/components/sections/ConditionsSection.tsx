@@ -119,29 +119,8 @@ export default function ConditionsSection() {
       id="conditions"
       ref={containerRef}
       onMouseMove={handleMouseMove}
-      className={`relative w-full ${isMobile ? 'h-auto py-16' : 'h-[900vh]'} bg-[#050806] font-sans z-0`}
+      className="relative w-full h-[900vh] bg-[#050806] font-sans z-0"
     >
-      {/* MOBILE NATIVE STACKING FAST-PATH */}
-      {isMobile ? (
-        <div className="w-full flex flex-col px-6 gap-16 relative z-10">
-          <div className="text-center mb-4">
-             <span className="text-[var(--brand-sand)] font-space tracking-[0.2em] text-[10px] uppercase block mb-3">Healing Process</span>
-             <h2 className="text-3xl font-gallient text-white mb-4">The Ayurvedic Route</h2>
-          </div>
-          {STEPS.map((step, idx) => (
-             <div key={idx} className="flex flex-col gap-4">
-                <div className="relative w-full aspect-square overflow-hidden shadow-2xl">
-                   <img src={step.img} alt={step.title} className="w-full h-full object-cover grayscale-[20%]" />
-                   <div className="absolute top-2 left-2 bg-[#050806]/80 px-3 py-1 font-space text-[10px] text-[var(--brand-sand)] uppercase tracking-widest border border-white/10">Phase 0{idx + 1}</div>
-                </div>
-                <div>
-                   <h3 className="text-2xl font-gallient text-white mb-2">{step.title}</h3>
-                   <p className="text-[#8c7f70] text-sm leading-relaxed">{step.desc}</p>
-                </div>
-             </div>
-          ))}
-        </div>
-      ) : (
       <motion.div 
         className="sticky top-0 w-full h-[100svh] lg:h-screen overflow-hidden p-0 m-0 will-change-transform"
         style={{ y: entryY }}
@@ -371,7 +350,6 @@ export default function ConditionsSection() {
         </motion.div>
 
       </motion.div>
-      )}
     </section>
   );
 }
