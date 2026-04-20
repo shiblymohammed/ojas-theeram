@@ -1,6 +1,7 @@
 import dynamic from "next/dynamic";
 import HeroSection from "@/components/sections/HeroSection";
 import IntroSection from "@/components/sections/IntroSection";
+import SectionReveal from "@/components/ui/SectionReveal";
 
 const ConditionsSection = dynamic(() => import("@/components/sections/ConditionsSection"));
 const HowItWorksSection = dynamic(() => import("@/components/sections/HowItWorksSection"));
@@ -44,13 +45,19 @@ export default function Home() {
       {/* <TestimonialsSection /> */}
 
       {/* 11. WHY CHOOSE US */}
-      <WhyChooseUs />
+      <SectionReveal>
+         <WhyChooseUs />
+      </SectionReveal>
 
       {/* 12. LOCATION */}
-      <LocationSection />
+      <SectionReveal>
+         <LocationSection />
+      </SectionReveal>
 
       {/* 13. FINAL CTA */}
-      <CTASection />
+      <SectionReveal>
+         <CTASection />
+      </SectionReveal>
     </main>
   );
 }

@@ -195,28 +195,45 @@ function DesktopDoctorSection() {
 // MOBILE DEDICATED DOCTOR PROFILE (100% NATIVE)
 // =========================================
 function MobileDoctorSection() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  
+  // Localized scroll hook: Only tracks pixels while this specific container is in view!
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"]
+  });
+
+  const imgScale = useTransform(scrollYProgress, [0, 0.5], [1, 1.15]);
+  const imgY = useTransform(scrollYProgress, [0, 0.5], ["0%", "15%"]);
+
   return (
-    <section className="relative w-full min-h-screen bg-[#f3eee8] overflow-hidden md:hidden pb-12">
-      {/* Top 60% Portrait Image */}
-      <div className="relative w-full h-[60vh]">
-        <Image 
-          src={leadPhysician.image} 
-          alt={leadPhysician.name}
-          fill
-          className="object-cover object-top grayscale-[20%]"
-          sizes="100vw"
-          priority
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#f3eee8] via-transparent to-transparent opacity-90" />
+    <section ref={containerRef} className="relative w-full min-h-screen bg-[#f3eee8] overflow-hidden md:hidden pb-12">
+      {/* Top 60% Portrait Image with Localized Parallax */}
+      <div className="relative w-full h-[60vh] overflow-hidden">
+        <motion.div 
+          className="absolute inset-0 z-0 origin-center"
+          style={{ scale: imgScale, y: imgY }}
+        >
+          <Image 
+            src={leadPhysician.image} 
+            alt={leadPhysician.name}
+            fill
+            className="object-cover object-top grayscale-[20%]"
+            sizes="100vw"
+            priority
+          />
+        </motion.div>
+        {/* Soft elegant vignette fading into the card */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#f3eee8] via-transparent to-transparent opacity-90 z-10" />
       </div>
 
       {/* Slide-up Overlapping Text Card */}
       <motion.div 
-        initial={{ y: 50, opacity: 0 }}
+        initial={{ y: 80, opacity: 0 }}
         whileInView={{ y: -60, opacity: 1 }}
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.8, ease: "easeOut" }}
-        className="relative z-10 mx-4 bg-[#f6f2ee] rounded-3xl p-6 shadow-2xl border border-[var(--brand-sand)]/20"
+        className="relative z-20 mx-4 bg-[#f6f2ee] rounded-3xl p-6 shadow-2xl border border-[var(--brand-sand)]/20 flex flex-col"
       >
         <span className="flex items-center gap-2 text-[var(--brand-sand)] font-space tracking-widest text-[9px] uppercase mb-3">
           <span className="w-6 h-[1px] bg-[var(--brand-sand)]"></span>
@@ -230,16 +247,32 @@ function MobileDoctorSection() {
         </p>
 
         {/* Dynamic Specialties Grid */}
-        <div className="grid grid-cols-2 gap-3 mb-8">
+        <motion.div 
+          className="grid grid-cols-2 gap-3 mb-8"
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true }}
+          variants={{
+             hidden: { opacity: 0 },
+             show: {
+               opacity: 1,
+               transition: { staggerChildren: 0.1, delayChildren: 0.3 }
+             }
+          }}
+        >
           {leadPhysician.specialties?.slice(0, 4).map((spec, i) => (
-             <div key={i} className="flex items-start gap-2 bg-white/50 rounded-xl p-3 border border-black/5 shadow-sm">
+             <motion.div 
+                key={i} 
+                variants={{ hidden: { opacity: 0, y: 10 }, show: { opacity: 1, y: 0 } }}
+                className="flex items-start gap-2 bg-white/50 rounded-xl p-3 border border-black/5 shadow-sm"
+             >
                 <Award className="w-4 h-4 text-[var(--brand-forest)] shrink-0 mt-[2px]" />
                 <span className="text-[10px] sm:text-xs font-sans font-medium text-[var(--text-primary)] relative top-[1px]">
                    {spec}
                 </span>
-             </div>
+             </motion.div>
           ))}
-        </div>
+        </motion.div>
 
         <Link href="/about" className="group flex items-center justify-between w-full bg-[var(--brand-forest)] text-white px-6 py-4 rounded-xl hover:bg-[#1a2e24] transition-colors shadow-lg">
           <div className="flex flex-col">

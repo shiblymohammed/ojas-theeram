@@ -76,15 +76,21 @@ export default function ProductsPreview() {
            </span>
         </div>
 
-        {/* Primary Foreground Info */}
-        <div className="relative z-10 flex flex-col items-center">
+        {/* Primary Foreground Info animated entrance on mobile */}
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="relative z-10 flex flex-col items-center"
+        >
           <span className="font-space text-[9px] tracking-[0.4em] uppercase text-[var(--brand-sand)] font-bold mb-3 drop-shadow-md max-md:drop-shadow-none">
             Signature Product
           </span>
           <h3 className="text-[75px] font-gallient text-white/90 leading-[0.85] drop-shadow-2xl max-md:drop-shadow-none mb-4">
             {product.name}
           </h3>
-          <p className="text-white/60 font-sans text-[11px] leading-relaxed max-w-[260px] drop-shadow-md max-md:drop-shadow-none mb-6">
+          <p className="text-white/60 font-sans text-[11px] leading-relaxed max-w-[260px] drop-shadow-md max-md:drop-shadow-none mb-6 text-center">
             {product.description}
           </p>
           
@@ -98,7 +104,7 @@ export default function ProductsPreview() {
               </div>
             ))}
           </div>
-        </div>
+        </motion.div>
       </div>
 
       {/* 3. Product Cutout Image (Full Screen Layer) */}

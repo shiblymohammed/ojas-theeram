@@ -29,8 +29,8 @@ export default function AdvancedCareSection() {
     <section 
       ref={containerRef}
       id="advanced-care" 
-      // Overlap the Doctor Section & extend scroll space for stacking!
-      className="relative h-[400vh] mt-[-100vh] z-30 bg-[#050806] text-[var(--text-primary)]"
+      // Overlap the Doctor Section & extend scroll space for stacking on Desktop only
+      className="relative md:h-[400vh] h-[300vh] md:mt-[-100vh] mt-0 z-30 bg-[#050806] text-[var(--text-primary)]"
     >
       {/* Sticky Full-Screen Takeover Container */}
       <div className="sticky top-0 h-[100svh] lg:h-screen w-full flex items-center justify-center overflow-hidden bg-[#050806]">

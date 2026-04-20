@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useTransform, LayoutGroup } from "framer-motion";
 import { therapies, panchakarma } from "@/data/treatments";
 
 // Combine a few featured treatments for the preview
@@ -180,9 +180,11 @@ function DesktopTreatmentsPreview() {
 }
 
 // =========================================
-// MOBILE DEDICATED SNAP-CAROUSEL (100% NATIVE)
+// MOBILE DEDICATED VERTICAL ACCORDION
 // =========================================
 function MobileTreatmentsPreview() {
+  const [expandedIdx, setExpandedIdx] = useState<number | null>(0); // Default open first
+
   return (
     <section className="relative w-full py-20 bg-[#f3eee8] overflow-hidden md:hidden">
       <div className="px-6 mb-8 text-center">
@@ -194,46 +196,81 @@ function MobileTreatmentsPreview() {
          <h2 className="text-4xl font-gallient text-[var(--brand-forest)] mb-4">
             Healing Regimens
          </h2>
-         <p className="text-xs font-sans text-black/50 leading-relaxed px-4">
-            Swipe to explore our deepest restoration therapies, tailored to your unique dosha.
+         <p className="text-xs font-sans text-black/50 leading-relaxed px-4 mb-2">
+            Tap to explore our deepest restoration therapies, tailored to your dosha.
          </p>
       </div>
 
-      {/* HORIZONTAL SNAP CAROUSEL */}
-      <div className="w-full flex overflow-x-auto snap-x snap-mandatory hide-scrollbar pb-8 px-6 gap-6">
-        {featuredTreatments.map((treatment, idx) => (
-           <div 
-             key={idx} 
-             className="relative flex-none w-[85vw] h-[65vh] snap-center rounded-[2rem] overflow-hidden shadow-2xl border border-[var(--brand-forest)]/10"
-           >
-              {/* Background Image */}
-              <Image 
-                 src={treatment.image}
-                 alt={treatment.name}
-                 fill
-                 className="object-cover"
-                 sizes="85vw"
-              />
-              {/* Gradient Map */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
-              
-              {/* Content Panel Boxed at the Bottom */}
-              <div className="absolute bottom-0 inset-x-0 p-6 sm:p-8 flex flex-col justify-end">
-                 <span className="inline-block px-3 py-1 border border-white/20 rounded-full font-space text-[8px] uppercase tracking-widest text-white/90 mb-4 self-start bg-white/10 max-md:backdrop-blur-none">
-                    {treatment.type}
-                 </span>
-                 <h3 className="text-white font-gallient text-3xl mb-3">
-                    {treatment.name}
-                 </h3>
-                 <p className="text-white/70 font-sans text-xs leading-relaxed mb-6">
-                    {treatment.desc}
-                 </p>
-                 <Link href="/treatments" className="w-full text-center py-4 rounded-full border border-white text-white font-space uppercase text-[9px] tracking-widest hover:bg-white hover:text-black transition-colors">
-                    Explore Details
-                 </Link>
-              </div>
-           </div>
-        ))}
+      <div className="px-4 flex flex-col gap-3 pb-8">
+        <LayoutGroup>
+          {featuredTreatments.map((treatment, idx) => {
+            const isExpanded = expandedIdx === idx;
+            return (
+              <motion.div
+                layout
+                key={idx}
+                onClick={() => setExpandedIdx(isExpanded ? null : idx)}
+                className={`relative w-full overflow-hidden rounded-[24px] cursor-pointer shadow-lg transition-shadow bg-[var(--brand-forest)]`}
+                animate={{ height: isExpanded ? "55vh" : "10vh" }}
+                transition={{ duration: 0.6, ease: [0.32, 0.72, 0, 1] }}
+              >
+                {/* Background Image (Scales softly when expanded) */}
+                <motion.div 
+                  className="absolute inset-0 z-0 pointer-events-none"
+                  animate={{ scale: isExpanded ? 1 : 1.1, opacity: isExpanded ? 1 : 0.4 }}
+                  transition={{ duration: 0.8, ease: "easeOut" }}
+                >
+                  <Image 
+                    src={treatment.image}
+                    alt={treatment.name}
+                    fill
+                    className="object-cover"
+                    sizes="100vw"
+                  />
+                  <div className={`absolute inset-0 bg-gradient-to-t ${isExpanded ? 'from-black/90 via-black/30' : 'from-black/60'} to-transparent transition-all duration-700`} />
+                </motion.div>
+
+                {/* Collapsed/Expanded Shared Header Text */}
+                <motion.div layout className="absolute top-0 inset-x-0 p-5 flex items-center justify-between z-10 pointer-events-none">
+                   <motion.h3 layout className="text-white font-gallient text-2xl drop-shadow-md tracking-wide">
+                     {treatment.name}
+                   </motion.h3>
+                   <motion.div 
+                     animate={{ rotate: isExpanded ? 180 : 0 }}
+                     className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center shrink-0 border border-white/30"
+                   >
+                     <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                     </svg>
+                   </motion.div>
+                </motion.div>
+
+                {/* Expanded Detailed Content at the bottom */}
+                <AnimatePresence>
+                  {isExpanded && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 10 }}
+                      transition={{ duration: 0.5, delay: 0.1 }}
+                      className="absolute bottom-0 inset-x-0 p-6 z-10 flex flex-col justify-end"
+                    >
+                      <span className="inline-block px-3 py-1 border border-white/20 rounded-full font-space text-[8px] uppercase tracking-widest text-white/90 mb-4 self-start bg-white/10">
+                        {treatment.type}
+                      </span>
+                      <p className="text-white/80 font-sans text-xs leading-relaxed mb-6 border-l border-[var(--brand-sand)]/50 pl-4">
+                        {treatment.desc}
+                      </p>
+                      <Link href="/treatments" className="w-full text-center py-4 rounded-full border border-white/50 text-white font-space uppercase text-[9px] tracking-[0.2em] hover:bg-white hover:text-black transition-colors backdrop-blur-sm">
+                        Explore Details
+                      </Link>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.div>
+            );
+          })}
+        </LayoutGroup>
       </div>
     </section>
   );
