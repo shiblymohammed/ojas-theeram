@@ -32,7 +32,7 @@ export default function CTASection() {
       className="relative min-h-0 lg:min-h-screen flex flex-col lg:flex-row w-full overflow-hidden"
     >
       {/* ── Left Column: Form & Content (Solid Dark) ── */}
-      <div className="w-full lg:w-1/2 bg-[#060a08] relative z-10 flex flex-col justify-center px-8 sm:px-16 md:px-24 py-20 lg:py-24 shadow-2xl">
+      <div className="w-full lg:w-1/2 bg-transparent relative z-10 flex flex-col justify-center px-8 sm:px-16 md:px-24 py-20 lg:py-24 shadow-2xl">
         <motion.div
            initial={{ opacity: 0, x: -30 }}
            whileInView={{ opacity: 1, x: 0 }}

@@ -18,7 +18,7 @@ export default function LocationSection() {
   return (
     <section
       id="location"
-      className="bg-[#060a08] py-24 md:py-32 overflow-hidden"
+      className="bg-transparent py-24 md:py-32 overflow-hidden"
     >
       <div className="container mx-auto px-6 max-w-7xl">
 

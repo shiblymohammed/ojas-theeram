@@ -2,6 +2,7 @@ import dynamic from "next/dynamic";
 import HeroSection from "@/components/sections/HeroSection";
 import IntroSection from "@/components/sections/IntroSection";
 import SectionReveal from "@/components/ui/SectionReveal";
+import ColorBlendWrapper from "@/components/ui/ColorBlendWrapper";
 
 const ConditionsSection = dynamic(() => import("@/components/sections/ConditionsSection"));
 const HowItWorksSection = dynamic(() => import("@/components/sections/HowItWorksSection"));
@@ -44,20 +45,23 @@ export default function Home() {
       {/* 10. TESTIMONIALS */}
       {/* <TestimonialsSection /> */}
 
-      {/* 11. WHY CHOOSE US */}
-      <SectionReveal>
-         <WhyChooseUs />
-      </SectionReveal>
+      {/* Smooth Color Interpolation Blending for Lower Static Sections */}
+      <ColorBlendWrapper colors={["#f7f7eb", "#060a08"]}>
+        {/* 11. WHY CHOOSE US */}
+        <SectionReveal>
+          <WhyChooseUs />
+        </SectionReveal>
 
-      {/* 12. LOCATION */}
-      <SectionReveal>
-         <LocationSection />
-      </SectionReveal>
+        {/* 12. LOCATION */}
+        <SectionReveal>
+          <LocationSection />
+        </SectionReveal>
 
-      {/* 13. FINAL CTA */}
-      <SectionReveal>
-         <CTASection />
-      </SectionReveal>
+        {/* 13. FINAL CTA */}
+        <SectionReveal>
+          <CTASection />
+        </SectionReveal>
+      </ColorBlendWrapper>
     </main>
   );
 }

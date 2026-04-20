@@ -116,7 +116,7 @@ export default function WhyChooseUs() {
       id="why-choose-us" 
       ref={containerRef} 
       // High section length to allow smooth scrolling through the 4 cards
-      className="relative w-full bg-[var(--bg-primary)] pb-24"
+      className="relative w-full bg-transparent pb-24"
     >
       {/* Introduction Header - fades out as we start scrolling the cards */}
       <div className="sticky top-0 h-[40vh] md:h-[50vh] flex flex-col items-center justify-center text-center px-6 z-0">
