@@ -18,7 +18,7 @@ export default function HeroSection() {
   };
 
   return (
-    <div ref={ref} className="sticky top-0 h-[100svh] lg:h-screen w-full -z-10 bg-[var(--bg-primary)] overflow-hidden">
+    <div ref={ref} className="sticky top-0 h-[100dvh] w-full -z-10 bg-[var(--bg-primary)] overflow-hidden">
       
       {/* ── Background Video with Static Focus ── */}
       <div className="absolute inset-0 w-full h-full transform-gpu origin-top">
@@ -101,3 +101,4 @@ export default function HeroSection() {
     </div>
   );
 }
+

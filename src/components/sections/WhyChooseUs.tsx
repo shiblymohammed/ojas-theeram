@@ -66,7 +66,7 @@ const Card = ({
   const opacity = useTransform(progress, range, [1, 0.5]);
 
   return (
-    <div ref={containerRef} className="h-[100svh] lg:h-screen flex items-center justify-center sticky top-0">
+    <div ref={containerRef} className="h-[100dvh] lg:h-screen flex items-center justify-center sticky top-0">
       <motion.div 
         style={{ scale, top: `calc(-10vh + ${i * 40}px)` }}
         className={`relative flex flex-col md:flex-row w-full max-w-5xl h-[500px] md:h-[450px] ${feature.bgColor} ${feature.borderColor} border rounded-[2rem] md:rounded-[3rem] p-8 md:p-16 origin-top shadow-2xl overflow-hidden`}
@@ -158,3 +158,4 @@ export default function WhyChooseUs() {
     </section>
   );
 }
+

@@ -190,7 +190,7 @@ export default function IntroSection() {
       <section ref={containerRef} className="relative -mt-[100vh] z-20">
         
         {/* ── STICKY BACKGROUND LAYER (Mobile-optimized Viewport Handling) ── */}
-        <div className="sticky top-0 h-[100svh] lg:h-screen w-full overflow-hidden z-0">
+        <div className="sticky top-0 h-[100dvh] w-full overflow-hidden z-0">
           <motion.div
             style={{ clipPath }}
             className="absolute inset-0 w-full h-full flex items-center justify-center overflow-hidden"
@@ -341,6 +341,7 @@ export default function IntroSection() {
     </>
   );
 }
+
 
 
 

@@ -28,7 +28,7 @@ export const doctors: Doctor[] = [
       "One Day Clinical Workshop on Agni and Viddha Karma (Lila Academy of Ayurveda Studies)",
       "Advanced Training in Panchakarma Procedures and Post-Treatment Care"
     ],
-    image: "/images/doctors/arun.jpeg",
+    image: "/images/doctors/arun.webp",
     experience: "10+",
     stats: [
       { value: "10+", label: "Years Exp." },

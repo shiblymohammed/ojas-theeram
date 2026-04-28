@@ -70,9 +70,9 @@ export default function ConditionsSection() {
   const rawScrollTextY = useTransform(scrollYProgress, [0, 0.45], [0, -50]);
 
   // WRAPPED IN SPRING FOR ZERO MOBILE SCROLL LAG:
-  const scrollBgY = useSpring(rawScrollBgY, { stiffness: 80, damping: 20, mass: 0.5 });
-  const scrollWomanY = useSpring(rawScrollWomanY, { stiffness: 80, damping: 20, mass: 0.5 });
-  const scrollTextY = useSpring(rawScrollTextY, { stiffness: 80, damping: 20, mass: 0.5 });
+  const scrollBgY = useSpring(rawScrollBgY, { stiffness: 300, damping: 40, mass: 0.2 });
+  const scrollWomanY = useSpring(rawScrollWomanY, { stiffness: 300, damping: 40, mass: 0.2 });
+  const scrollTextY = useSpring(rawScrollTextY, { stiffness: 300, damping: 40, mass: 0.2 });
 
   // Track the entry so it stays fixed behind Packages
   const { scrollYProgress: entryProgress } = useScroll({
@@ -80,7 +80,7 @@ export default function ConditionsSection() {
     offset: ["start end", "start start"]
   });
 
-  const entryY = useTransform(entryProgress, [0, 1], ["-100vh", "0vh"]);
+  const entryY = useTransform(entryProgress, [0, 1], ["-100dvh", "0dvh"]);
 
   // Transitions: 
   // 0 to 0.25: Conditions Woman showing cleanly.
@@ -122,7 +122,7 @@ export default function ConditionsSection() {
       className="relative w-full h-[900vh] bg-[#050806] font-sans z-0"
     >
       <motion.div 
-        className="sticky top-0 w-full h-[100svh] lg:h-screen overflow-hidden p-0 m-0 will-change-transform"
+        className="sticky top-0 w-full h-[100dvh] lg:h-screen overflow-hidden p-0 m-0 will-change-transform"
         style={{ y: entryY }}
       >
         {/* === 1. UNIFIED BACKGROUND === */}
@@ -449,5 +449,6 @@ function Slide({ step, index, activeFloat }: { step: any, index: number, activeF
     </motion.div>
   );
 }
+
 
 

@@ -33,7 +33,7 @@ export default function AdvancedCareSection() {
       className="relative md:h-[400vh] h-[300vh] md:mt-[-100vh] mt-0 z-30 bg-[#050806] text-[var(--text-primary)]"
     >
       {/* Sticky Full-Screen Takeover Container */}
-      <div className="sticky top-0 h-[100svh] lg:h-screen w-full flex items-center justify-center overflow-hidden bg-[#050806]">
+      <div className="sticky top-0 h-[100dvh] lg:h-screen w-full flex items-center justify-center overflow-hidden bg-[#050806]">
         
         {/* Cinematic Modulated Image Wrapper */}
         <div className="absolute inset-0 z-0 bg-[#050806] overflow-hidden">
@@ -146,3 +146,4 @@ function StackedCard({ item, index, scrollYProgress, total }: { item: any, index
     </motion.div>
   );
 }
+

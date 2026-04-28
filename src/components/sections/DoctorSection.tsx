@@ -51,7 +51,7 @@ function DesktopDoctorSection() {
       // Negative top margin physically overlaps the last 100vh of the TreatmentsSection beneath us!
       className="relative h-[250vh] mt-[-100vh] z-20 bg-transparent text-[var(--text-primary)]"
     >
-      <div className="sticky top-0 h-[100svh] lg:h-screen w-full flex flex-col md:flex-row overflow-visible">
+      <div className="sticky top-0 h-[100dvh] lg:h-screen w-full flex flex-col md:flex-row overflow-visible">
         
         {/* Left Side: Enters from TOP using extreme negative parallax (Text Layout) */}
         <motion.div 
@@ -286,3 +286,4 @@ function MobileDoctorSection() {
     </section>
   );
 }
+
