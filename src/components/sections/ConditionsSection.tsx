@@ -80,7 +80,8 @@ export default function ConditionsSection() {
     offset: ["start end", "start start"]
   });
 
-  const entryY = useTransform(entryProgress, [0, 1], ["-100dvh", "0dvh"]);
+  // Use vh percentage of window height for reliable mobile entry (avoids dvh string interpolation issues)
+  const entryY = useTransform(entryProgress, [0, 1], ["-100%", "0%"]);
 
   // Transitions: 
   // 0 to 0.25: Conditions Woman showing cleanly.

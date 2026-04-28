@@ -187,7 +187,7 @@ export default function IntroSection() {
 
   return (
     <>
-      <section ref={containerRef} className="relative -mt-[100vh] z-20">
+      <section ref={containerRef} className="relative -mt-[100dvh] z-20">
         
         {/* ── STICKY BACKGROUND LAYER (Mobile-optimized Viewport Handling) ── */}
         <div className="sticky top-0 h-[100dvh] w-full overflow-hidden z-0">
